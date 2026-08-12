@@ -52,6 +52,19 @@ def test_happy_path_text(monkeypatch, capsys, photo_path, fake_meal, sample_anal
     assert "grilled chicken breast" in out
 
 
+def test_hint_flag_passes_through(monkeypatch, capsys, photo_path, fake_meal, sample_analysis):
+    captured = {}
+
+    def fake_run(path, **kwargs):
+        captured.update(kwargs)
+        return (fake_meal, sample_analysis)
+
+    monkeypatch.setattr(estimate.pipeline, "run", fake_run)
+    rc = estimate.main([str(photo_path), "--hint", "all organic, olive oil"])
+    assert rc == 0
+    assert captured["hint"] == "all organic, olive oil"
+
+
 def test_happy_path_json(monkeypatch, capsys, photo_path, fake_meal, sample_analysis):
     monkeypatch.setattr(
         estimate.pipeline, "run", lambda *args, **kwargs: (fake_meal, sample_analysis)

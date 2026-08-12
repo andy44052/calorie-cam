@@ -91,6 +91,25 @@
   #photo-input { display: none; }
   .hint { text-align: center; color: var(--blue-text); font-size: 13px; margin-top: 12px; }
 
+  .context-label {
+    display: block;
+    color: var(--blue-text);
+    font-size: 13px;
+    margin: 16px 0 6px;
+  }
+  .context-box {
+    display: block; width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--blue-border);
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 15px;
+    padding: 11px 12px;
+    font-family: inherit;
+  }
+  .context-box::placeholder { color: var(--blue-text); opacity: 0.65; }
+  .context-box:focus { outline: none; border-color: var(--blue); }
+
   .hidden { display: none !important; }
 
   /* loading */
@@ -186,6 +205,10 @@
     <div class="card">
       <label class="snap-btn" for="photo-input">&#128247; Snap or pick a photo</label>
       <input id="photo-input" type="file" accept="image/*" capture="environment">
+      <label class="context-label" for="hint-input">Anything the camera can't see? <b>(optional)</b></label>
+      <input class="context-box" id="hint-input" type="text" maxlength="500"
+             placeholder="e.g. cooked in olive oil, double chicken, diet soda"
+             autocomplete="off">
       <p class="hint">Get the whole plate in frame &mdash; a fork or your hand helps me judge portion size.</p>
     </div>
   </section>
@@ -228,6 +251,7 @@
   const againBtn = document.getElementById("again");
   const loadingMsg = document.getElementById("loading-msg");
   const pinInput = document.getElementById("pin-input");
+  const hintBox = document.getElementById("hint-input");
   const PIN_KEY = "caloriecam_pin";
   const PHRASES = [
     "Identifying the food…",
@@ -349,6 +373,8 @@
     startLoading();
     const form = new FormData();
     form.append("photo", file, file.name || "photo.jpg");
+    const hintValue = hintBox.value.trim();
+    if (hintValue) form.append("hint", hintValue);
     const pin = localStorage.getItem(PIN_KEY);
     const headers = pin ? { "X-CalorieCam-Pin": pin } : {};
     try {
@@ -381,7 +407,10 @@
     show("intro");
   });
 
-  againBtn.addEventListener("click", () => show("intro"));
+  againBtn.addEventListener("click", () => {
+    hintBox.value = "";
+    show("intro");
+  });
 })();
 </script>
 </body>

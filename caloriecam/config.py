@@ -10,3 +10,7 @@ JPEG_QUALITY = 85
 # Room for adaptive thinking + the structured answer (thinking counts toward
 # max_tokens on Opus 5).
 MAX_TOKENS = 16000
+
+# User-typed context ("cooked in olive oil", "double chicken") is capped so a
+# giant paste can't blow up the prompt.
+HINT_MAX_CHARS = 500

@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv(ROOT / ".env")
 
 import anthropic  # noqa: E402
-from fastapi import FastAPI, File, Header, HTTPException, UploadFile  # noqa: E402
+from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile  # noqa: E402
 from fastapi.responses import FileResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from PIL import UnidentifiedImageError  # noqa: E402
@@ -45,6 +45,7 @@ def _required_pin() -> str:
 @app.post("/api/estimate")
 async def estimate(
     photo: UploadFile = File(...),
+    hint: str = Form(""),
     x_caloriecam_pin: str | None = Header(default=None),
 ) -> dict:
     required = _required_pin()
@@ -60,7 +61,7 @@ async def estimate(
         raise HTTPException(status_code=413, detail="Image too large (15 MB max).")
 
     try:
-        meal, _analysis = pipeline.run_bytes(data)
+        meal, _analysis = pipeline.run_bytes(data, hint=hint.strip() or None)
     except UnidentifiedImageError:
         raise HTTPException(status_code=400, detail="That file is not a readable image.")
     except RefusalError as exc:

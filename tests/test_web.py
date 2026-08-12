@@ -86,6 +86,36 @@ def test_vision_error_maps_to_502(monkeypatch, web_client):
     assert resp.status_code == 502
 
 
+def test_hint_form_field_reaches_pipeline(monkeypatch, web_client, sample_analysis):
+    captured = {}
+
+    def fake_run(data, **kwargs):
+        captured.update(kwargs)
+        return (evaluate(sample_analysis), sample_analysis)
+
+    monkeypatch.setattr(webapp.pipeline, "run_bytes", fake_run)
+    resp = web_client.post(
+        "/api/estimate",
+        files={"photo": ("meal.jpg", _jpeg_bytes(), "image/jpeg")},
+        data={"hint": "cooked in olive oil, all organic"},
+    )
+    assert resp.status_code == 200
+    assert captured["hint"] == "cooked in olive oil, all organic"
+
+
+def test_missing_hint_becomes_none(monkeypatch, web_client, sample_analysis):
+    captured = {}
+
+    def fake_run(data, **kwargs):
+        captured.update(kwargs)
+        return (evaluate(sample_analysis), sample_analysis)
+
+    monkeypatch.setattr(webapp.pipeline, "run_bytes", fake_run)
+    resp = _post_photo(web_client, _jpeg_bytes())
+    assert resp.status_code == 200
+    assert captured["hint"] is None
+
+
 def test_pin_gate_blocks_without_pin(monkeypatch, web_client):
     monkeypatch.setenv("CALORIECAM_PIN", "4321")
     resp = _post_photo(web_client, _jpeg_bytes())

@@ -29,12 +29,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="emit JSON instead of text")
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"model id (default: {DEFAULT_MODEL})")
     parser.add_argument("--max-px", type=int, default=MAX_IMAGE_PX, help="long-edge resize before upload")
+    parser.add_argument(
+        "--hint",
+        default=None,
+        help='extra context the photo cannot show, e.g. "cooked in olive oil"',
+    )
     args = parser.parse_args(argv)
 
     failures = 0
     for image in args.images:
         try:
-            meal, _analysis = pipeline.run(image, model=args.model)
+            meal, _analysis = pipeline.run(image, model=args.model, hint=args.hint)
         except FileNotFoundError:
             print(f"error: file not found: {image}", file=sys.stderr)
             failures += 1

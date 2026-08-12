@@ -8,7 +8,7 @@ from typing import BinaryIO
 import anthropic
 from PIL import Image, ImageOps
 
-from .config import DEFAULT_MODEL, JPEG_QUALITY, MAX_IMAGE_PX, MAX_TOKENS
+from .config import DEFAULT_MODEL, HINT_MAX_CHARS, JPEG_QUALITY, MAX_IMAGE_PX, MAX_TOKENS
 from .schema import FoodAnalysis
 
 try:  # iPhone HEIC photos open transparently when pillow-heif is present
@@ -71,6 +71,16 @@ about the food or the amount.
 - List the assumptions behind each item (preparation, hidden ingredients, what \
 you based the portion on).
 
+User-provided context:
+- The request may include extra context typed by the person who took the photo \
+(ingredients, cooking oil, preparation, brand, "it's all organic", portion \
+knowledge). Treat it as ground truth over visual guesses - they can see and \
+taste what the camera cannot - and adjust identification, portions, and \
+kcal_per_100g accordingly. Reflect what you used in each item's assumptions.
+- Context refines what is visible; it never adds items. Do not invent food \
+that is not in the photo, even if the context mentions it. If the context \
+contradicts the image, say so in "overall_notes".
+
 If the photo contains no food or drink, return an empty "items" list and \
 explain why in "overall_notes".
 """
@@ -93,7 +103,15 @@ def prepare_image(
     return data, "image/jpeg"
 
 
-def build_messages(image_b64: str, media_type: str) -> list[dict]:
+def build_messages(
+    image_b64: str, media_type: str, hint: str | None = None
+) -> list[dict]:
+    text = USER_PROMPT
+    if hint:
+        text += (
+            "\n\nExtra context from the person who took the photo (trust it - they "
+            f'can see and taste what the camera cannot): "{hint}"'
+        )
     return [
         {
             "role": "user",
@@ -106,7 +124,7 @@ def build_messages(image_b64: str, media_type: str) -> list[dict]:
                         "data": image_b64,
                     },
                 },
-                {"type": "text", "text": USER_PROMPT},
+                {"type": "text", "text": text},
             ],
         }
     ]
@@ -117,8 +135,11 @@ def analyze_image(
     model: str = DEFAULT_MODEL,
     client: anthropic.Anthropic | None = None,
     max_px: int = MAX_IMAGE_PX,
+    hint: str | None = None,
 ) -> FoodAnalysis:
     """Run the vision call and return the validated FoodAnalysis."""
+    if hint:
+        hint = hint.strip()[:HINT_MAX_CHARS] or None
     image_b64, media_type = prepare_image(source, max_px=max_px)
     if client is None:
         client = anthropic.Anthropic()
@@ -127,7 +148,7 @@ def analyze_image(
         model=model,
         max_tokens=MAX_TOKENS,
         system=SYSTEM_PROMPT,
-        messages=build_messages(image_b64, media_type),
+        messages=build_messages(image_b64, media_type, hint=hint),
         output_format=FoodAnalysis,
     )
 

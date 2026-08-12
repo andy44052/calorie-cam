@@ -6,7 +6,7 @@ import pytest
 from PIL import Image
 
 from caloriecam import vision
-from caloriecam.config import MAX_TOKENS
+from caloriecam.config import HINT_MAX_CHARS, MAX_TOKENS
 from caloriecam.schema import FoodAnalysis
 from caloriecam.vision import (
     RefusalError,
@@ -69,6 +69,27 @@ def test_png_with_alpha_converted(tmp_path):
 def test_missing_file_raises(tmp_path):
     with pytest.raises(FileNotFoundError):
         prepare_image(tmp_path / "nope.jpg")
+
+
+def test_hint_appended_to_user_text():
+    messages = build_messages("QUJD", "image/jpeg", hint="cooked in olive oil")
+    text = messages[0]["content"][1]["text"]
+    assert text.startswith(vision.USER_PROMPT)
+    assert "cooked in olive oil" in text
+
+
+def test_no_hint_leaves_prompt_unchanged():
+    messages = build_messages("QUJD", "image/jpeg")
+    assert messages[0]["content"][1]["text"] == vision.USER_PROMPT
+
+
+def test_hint_passed_through_and_truncated(photo_path, sample_analysis):
+    client = FakeClient(_ok_response(sample_analysis))
+    analyze_image(photo_path, client=client, hint="x" * 900)
+    (call,) = client.messages.calls
+    text = call["messages"][0]["content"][1]["text"]
+    assert "x" * HINT_MAX_CHARS in text
+    assert "x" * (HINT_MAX_CHARS + 1) not in text
 
 
 # --- build_messages ----------------------------------------------------------
