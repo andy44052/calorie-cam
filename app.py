@@ -23,7 +23,7 @@ from fastapi.responses import FileResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from PIL import UnidentifiedImageError  # noqa: E402
 
-from caloriecam import pipeline, report  # noqa: E402
+from caloriecam import __version__, pipeline, report  # noqa: E402
 from caloriecam.vision import RefusalError, VisionError  # noqa: E402
 
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024
@@ -35,6 +35,11 @@ app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(ROOT / "static" / "index.html")
+
+
+@app.get("/api/health")
+def health() -> dict:
+    return {"status": "ok", "version": __version__}
 
 
 def _required_pin() -> str:

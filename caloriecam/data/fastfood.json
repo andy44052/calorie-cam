@@ -1,5 +1,5 @@
 {
-  "provenance": "Compiled by the project owner from USDA data, restaurant disclosures, and aggregated sources (2026-08). Values are typical/approximate; ranges kept where the source gave ranges.",
+  "provenance": "Compiled by the project owner from USDA data, restaurant disclosures, and aggregated sources (2026-08). Values are typical/approximate; ranges kept where the source gave ranges. loose_match lets a combined item absorb ingredient words; exclude_tokens blocks words that change the item (double, deluxe, meal).",
   "menu_items": [
     {
       "item": "French fries (small)",
@@ -28,10 +28,12 @@
     {
       "item": "Hamburger or cheeseburger (single patty)",
       "brand": null,
-      "aliases": ["hamburger", "cheeseburger", "plain burger", "single burger"],
+      "aliases": ["hamburger", "cheeseburger", "plain burger", "single burger", "burger"],
       "kcal": {"low": 250, "mid": 275, "high": 300},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "loose_match": true,
+      "exclude_tokens": ["double", "triple", "meal", "combo", "whopper", "mac"]
     },
     {
       "item": "Big Mac",
@@ -39,7 +41,8 @@
       "aliases": ["big mac"],
       "kcal": {"low": 560, "mid": 575, "high": 590},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "exclude_tokens": ["meal", "combo"]
     },
     {
       "item": "Whopper",
@@ -47,7 +50,8 @@
       "aliases": ["whopper"],
       "kcal": {"low": 670, "mid": 690, "high": 710},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "exclude_tokens": ["double", "jr", "junior", "meal", "combo"]
     },
     {
       "item": "Double Whopper",
@@ -55,7 +59,8 @@
       "aliases": ["double whopper"],
       "kcal": {"low": 920, "mid": 950, "high": 980},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "exclude_tokens": ["meal", "combo"]
     },
     {
       "item": "Whopper Jr",
@@ -63,7 +68,8 @@
       "aliases": ["whopper jr", "whopper junior"],
       "kcal": {"low": 340, "mid": 340, "high": 340},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "exclude_tokens": ["meal", "combo"]
     },
     {
       "item": "Fried chicken sandwich",
@@ -71,7 +77,9 @@
       "aliases": ["chicken sandwich", "fried chicken sandwich", "crispy chicken sandwich"],
       "kcal": {"low": 400, "mid": 550, "high": 700},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "loose_match": true,
+      "exclude_tokens": ["double", "deluxe", "meal", "combo"]
     },
     {
       "item": "Chicken burrito or bowl",
@@ -79,7 +87,9 @@
       "aliases": ["burrito", "chicken burrito", "burrito bowl", "chicken bowl"],
       "kcal": {"low": 500, "mid": 650, "high": 800},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "loose_match": true,
+      "exclude_tokens": ["loaded", "double"]
     },
     {
       "item": "Loaded burrito or bowl (extra rice, cheese, guac, sour cream)",
@@ -87,7 +97,18 @@
       "aliases": ["loaded burrito", "loaded bowl", "loaded burrito bowl"],
       "kcal": {"low": 1000, "mid": 1100, "high": 1200},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "loose_match": true
+    },
+    {
+      "item": "Crunchy beef taco",
+      "brand": null,
+      "aliases": ["taco", "crunchy taco", "beef taco", "hard shell taco"],
+      "kcal": {"low": 170, "mid": 170, "high": 170},
+      "serving_g": 78,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["salad", "bowl"]
     },
     {
       "item": "Egg McMuffin",
@@ -95,7 +116,8 @@
       "aliases": ["egg mcmuffin"],
       "kcal": {"low": 310, "mid": 310, "high": 310},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "exclude_tokens": ["meal", "combo"]
     },
     {
       "item": "Breakfast biscuit or croissant sandwich",
@@ -103,15 +125,19 @@
       "aliases": ["breakfast sandwich", "sausage biscuit", "bacon egg biscuit", "breakfast croissant", "sausage egg croissant"],
       "kcal": {"low": 500, "mid": 600, "high": 700},
       "serving_g": null,
-      "unit_scalable": false
+      "unit_scalable": false,
+      "loose_match": true,
+      "exclude_tokens": ["meal", "combo"]
     },
     {
       "item": "Cheese pizza slice (hand-tossed)",
       "brand": null,
-      "aliases": ["cheese pizza", "pizza slice", "cheese pizza slice", "slice pizza"],
+      "aliases": ["cheese pizza", "pizza slice", "cheese pizza slice", "slice pizza", "pizza"],
       "kcal": {"low": 200, "mid": 245, "high": 290},
       "serving_g": 107,
-      "unit_scalable": true
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["pepperoni", "meat", "sausage", "supreme", "deep", "stuffed"]
     },
     {
       "item": "Pepperoni pizza slice (hand-tossed)",
@@ -119,7 +145,9 @@
       "aliases": ["pepperoni pizza", "pepperoni pizza slice", "pepperoni slice"],
       "kcal": {"low": 230, "mid": 280, "high": 330},
       "serving_g": 113,
-      "unit_scalable": true
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["deep", "stuffed"]
     }
   ]
 }

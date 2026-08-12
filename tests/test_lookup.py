@@ -30,14 +30,18 @@ def test_menu_data_is_sane():
         assert entry["aliases"], entry["item"]
         if entry.get("unit_scalable"):
             assert entry.get("serving_g"), f"{entry['item']} scalable but no serving_g"
+        assert isinstance(entry.get("loose_match", False), bool), entry["item"]
+        assert all(isinstance(t, str) for t in entry.get("exclude_tokens", [])), entry["item"]
 
 
 def test_generic_data_is_sane():
     foods = _generic_foods()
-    assert len(foods) >= 25
+    assert len(foods) >= 80
     for entry in foods:
         assert 0 < entry["kcal_per_100g"] <= 900, entry["name"]
         assert entry["aliases"], entry["name"]
+        assert isinstance(entry.get("loose_match", False), bool), entry["name"]
+        assert all(isinstance(t, str) for t in entry.get("exclude_tokens", [])), entry["name"]
 
 
 # --- menu-item matching ------------------------------------------------------
@@ -129,6 +133,97 @@ def test_generic_rice_variants():
 
 def test_unknown_food_returns_none():
     assert resolve(_food("chocolate lava cake", grams=120)) is None
+
+
+# --- combined foods must not match a single ingredient -----------------------
+
+
+def test_beef_and_broccoli_is_not_broccoli():
+    res = match_generic(_food("beef and broccoli", grams=300))
+    assert res is not None
+    assert res.matched_name == "beef stir-fry"
+    assert res.kcal_per_100g == 120  # not broccoli's 35
+
+
+def test_banana_bread_is_not_banana():
+    res = match_generic(_food("banana bread", grams=60))
+    assert res is not None
+    assert res.matched_name == "banana bread"
+    assert res.kcal_per_100g == 330  # not banana's 89
+
+
+def test_apple_pie_is_not_apple():
+    res = match_generic(_food("apple pie", grams=125))
+    assert res is not None and res.kcal_per_100g == 240  # not apple's 52
+
+
+def test_carrot_cake_is_not_carrot():
+    res = match_generic(_food("carrot cake", grams=100))
+    assert res is not None and res.kcal_per_100g == 400  # not carrot's 41
+
+
+def test_tomato_soup_is_not_tomato():
+    res = match_generic(_food("tomato soup", grams=300))
+    assert res is not None and res.kcal_per_100g == 40  # not tomato's 18
+
+
+def test_chicken_fried_rice_is_not_plain_rice():
+    res = match_generic(_food("chicken fried rice", grams=250))
+    assert res is not None
+    assert res.matched_name == "fried rice"
+    assert res.kcal_per_100g == 175  # not plain rice's 130
+
+
+def test_plain_fried_rice_beats_plain_rice():
+    res = match_generic(_food("fried rice", grams=200))
+    assert res is not None and res.kcal_per_100g == 175
+
+
+def test_strawberry_milkshake_is_not_strawberries():
+    res = match_generic(_food("strawberry milkshake", grams=400))
+    assert res is not None and res.kcal_per_100g == 120  # not strawberries' 33
+
+
+def test_harmless_modifiers_still_match():
+    res = match_generic(_food("a bowl of steamed white rice", grams=200))
+    assert res is not None and res.kcal_per_100g == 130
+
+
+def test_plural_folding_matches():
+    res = match_generic(_food("two fried eggs", grams=100))
+    assert res is not None and res.kcal_per_100g == 144
+
+
+def test_diet_soda_not_matched_to_regular():
+    res = match_generic(_food("diet coke", grams=400))
+    assert res is not None
+    assert res.kcal_per_100g < 1  # diet entry, not regular soda's 41
+
+
+def test_grilled_chicken_thigh_not_forced_to_breast():
+    res = match_generic(_food("grilled chicken thigh", grams=130))
+    assert res is not None
+    assert res.kcal_per_100g == 215  # thigh entry, not breast's 165
+
+
+def test_unknown_combined_dish_stays_unmatched():
+    assert match_generic(_food("chicken and rice casserole", grams=350)) is None
+
+
+def test_big_mac_meal_not_matched_as_single_item():
+    item = _food("Big Mac meal", grams=600, brand="McDonald's")
+    assert resolve(item) is None  # a meal is burger+fries+drink, not 575 kcal
+
+
+def test_double_cheeseburger_not_matched_to_single_patty():
+    assert resolve(_food("double cheeseburger", grams=280)) is None
+
+
+def test_taco_count_scaling():
+    res = match_menu_item(_food("3 crunchy tacos", grams=235))
+    assert res is not None
+    assert res.count == 3
+    assert res.kcal_mid == 170  # per-unit; sanity layer multiplies by count
 
 
 # --- evaluate() with resolutions --------------------------------------------

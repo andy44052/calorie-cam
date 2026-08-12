@@ -26,6 +26,12 @@ def _post_photo(web_client, content: bytes, filename="meal.jpg", mime="image/jpe
     )
 
 
+def test_health_endpoint(web_client):
+    resp = web_client.get("/api/health")
+    assert resp.status_code == 200
+    assert resp.json() == {"status": "ok", "version": webapp.__version__}
+
+
 def test_index_serves_page(web_client):
     resp = web_client.get("/")
     assert resp.status_code == 200
