@@ -32,6 +32,10 @@ two URLs:
 - `http://<your-lan-ip>:8000` - open this on your phone (same Wi-Fi)
 
 Tap **Snap or pick a photo**, take the picture, wait ~10-30 s, get the breakdown.
+The optional **"Anything the camera can't see?"** box feeds extra knowledge into
+the analysis - cooking oil, "all organic", "double chicken", "diet soda" - and
+the model weights it as ground truth over visual guesses (but it can never
+invent items that aren't in the photo). The CLI equivalent is `--hint "..."`.
 If the phone can't reach it, allow Python through the Windows Firewall prompt
 (private networks) the first time the server runs.
 
