@@ -1,0 +1,145 @@
+"""Layer 1: photo -> structured FoodAnalysis via the Claude vision API."""
+
+import base64
+import io
+from pathlib import Path
+from typing import BinaryIO
+
+import anthropic
+from PIL import Image, ImageOps
+
+from .config import DEFAULT_MODEL, JPEG_QUALITY, MAX_IMAGE_PX, MAX_TOKENS
+from .schema import FoodAnalysis
+
+try:  # iPhone HEIC photos open transparently when pillow-heif is present
+    from pillow_heif import register_heif_opener
+
+    register_heif_opener()
+except ImportError:
+    pass
+
+
+class VisionError(RuntimeError):
+    """The model call completed but produced no usable analysis."""
+
+
+class RefusalError(VisionError):
+    """The API declined the request (stop_reason == 'refusal')."""
+
+
+SYSTEM_PROMPT = """\
+You are the vision engine of a calorie-estimation app. You receive one photo \
+and must identify the food in it and estimate calories. Be rigorous and honest \
+about uncertainty.
+
+Identification:
+- List every distinct food and drink item you can see. A composite dish \
+(burger, burrito, curry served over rice) is ONE item; foods plated separately \
+are separate items.
+- If an item is a recognizable branded or chain-restaurant product (fast food, \
+packaged snack with a visible label), set "brand" to the chain/brand and name \
+the item as precisely as you can (e.g. brand "McDonald's", name "Big Mac").
+
+Portions:
+- Estimate edible weight in grams. For liquids use 1 ml = 1 g.
+- Judge scale from visible references: a dinner plate is ~27 cm across, a fork \
+is ~19 cm long, a 12 oz can is ~12 cm tall, an adult hand is ~18 cm. Report \
+which reference you used in "scale_reference".
+- Consider plate coverage AND pile height/density. Rice and pasta are denser \
+than they look; leafy salad is lighter.
+
+Portion reference points:
+- 85 g of cooked meat looks like a deck of cards or a palm (no fingers).
+- 1 cup (~160 g) of cooked rice or pasta is about a baseball / a closed fist.
+- Restaurant portions usually run 1.5-2x the label "serving size" - when a \
+plate looks generous, size UP, not down.
+- A "double" or "loaded" version of a composite item (burger, burrito) is \
+typically +40-70% over the regular, not exactly 2x.
+- Deep-frying adds absorbed oil (fries are ~300+ kcal/100g); baked or \
+air-fried versions of the same food are much lower per gram.
+
+Energy density:
+- "kcal_per_100g" is for the food AS PREPARED, not raw. Assume typical \
+home/restaurant preparation: food is usually cooked in oil or butter, and \
+dressings/sauces are often present. Hidden fat is the single biggest source of \
+undercounting - do not lowball it.
+
+Confidence and assumptions:
+- confidence "high": clear view, well-known food, decent scale cue. "medium": \
+partly obscured, mixed dish, or weak scale cues. "low": significant guessing \
+about the food or the amount.
+- List the assumptions behind each item (preparation, hidden ingredients, what \
+you based the portion on).
+
+If the photo contains no food or drink, return an empty "items" list and \
+explain why in "overall_notes".
+"""
+
+USER_PROMPT = "Analyze this photo and estimate the calories of everything shown."
+
+
+def prepare_image(
+    source: str | Path | BinaryIO, max_px: int = MAX_IMAGE_PX
+) -> tuple[str, str]:
+    """Load, orient, downscale, and re-encode a photo. Returns (base64, media_type)."""
+    img = Image.open(source)
+    img = ImageOps.exif_transpose(img)
+    img = img.convert("RGB")
+    if max(img.size) > max_px:
+        img.thumbnail((max_px, max_px))
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=JPEG_QUALITY)
+    data = base64.standard_b64encode(buf.getvalue()).decode("ascii")
+    return data, "image/jpeg"
+
+
+def build_messages(image_b64: str, media_type: str) -> list[dict]:
+    return [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": media_type,
+                        "data": image_b64,
+                    },
+                },
+                {"type": "text", "text": USER_PROMPT},
+            ],
+        }
+    ]
+
+
+def analyze_image(
+    source: str | Path | BinaryIO,
+    model: str = DEFAULT_MODEL,
+    client: anthropic.Anthropic | None = None,
+    max_px: int = MAX_IMAGE_PX,
+) -> FoodAnalysis:
+    """Run the vision call and return the validated FoodAnalysis."""
+    image_b64, media_type = prepare_image(source, max_px=max_px)
+    if client is None:
+        client = anthropic.Anthropic()
+
+    response = client.messages.parse(
+        model=model,
+        max_tokens=MAX_TOKENS,
+        system=SYSTEM_PROMPT,
+        messages=build_messages(image_b64, media_type),
+        output_format=FoodAnalysis,
+    )
+
+    stop_reason = getattr(response, "stop_reason", None)
+    if stop_reason == "refusal":
+        details = getattr(response, "stop_details", None)
+        explanation = getattr(details, "explanation", None) or "no explanation provided"
+        raise RefusalError(f"the API declined to analyze this image: {explanation}")
+
+    parsed = getattr(response, "parsed_output", None)
+    if parsed is None:
+        raise VisionError(
+            f"model returned no parseable analysis (stop_reason={stop_reason})"
+        )
+    return parsed

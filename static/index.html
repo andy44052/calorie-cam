@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>CalorieCam</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#127869;</text></svg>">
+<style>
+  :root {
+    --bg: #000000;
+    --white: #ffffff;
+    --blue: #2563eb;            /* functions: buttons, fills, badges */
+    --blue-text: #3b82f6;       /* information: meta text, ranges, notes */
+    --blue-border: rgba(37, 99, 235, 0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    padding: max(20px, env(safe-area-inset-top)) 16px 40px;
+  }
+  .wrap { max-width: 460px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 24px; }
+  #logo {
+    display: block;
+    max-height: 64px;
+    max-width: 220px;
+    margin: 0 auto 10px;
+  }
+  /* CSS recreation of the ANOVATOR wordmark; auto-replaced by /static/logo.png
+     the moment that file exists. */
+  #wordmark {
+    color: var(--white);
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 10px;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  #wordmark .o {
+    display: inline-block;
+    width: 0.68em;
+    height: 0.68em;
+    border: 0.115em solid var(--white);
+    border-radius: 50%;
+    position: relative;
+    margin: 0 0.06em;
+  }
+  #wordmark .o::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 0.28em;
+    height: 0.28em;
+    background: #ec1b60;
+    border-radius: 50%;
+  }
+  header h1 { font-size: 26px; letter-spacing: -0.5px; color: var(--white); }
+  header p { color: var(--blue-text); font-size: 14px; margin-top: 4px; }
+
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--blue-border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+
+  .snap-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 19px;
+    font-weight: 700;
+    padding: 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.08s ease;
+  }
+  .snap-btn:active { transform: scale(0.97); }
+  #photo-input { display: none; }
+  .hint { text-align: center; color: var(--blue-text); font-size: 13px; margin-top: 12px; }
+
+  .hidden { display: none !important; }
+
+  /* loading */
+  #loading { text-align: center; padding: 34px 20px; }
+  .dots { display: inline-flex; gap: 7px; margin-bottom: 16px; }
+  .dots i {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--blue);
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .dots i:nth-child(2) { animation-delay: 0.15s; }
+  .dots i:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+  #loading-msg { font-size: 16px; font-weight: 600; color: var(--white); }
+  #loading-sub { color: var(--blue-text); font-size: 13px; margin-top: 6px; }
+
+  /* error */
+  #error h2 { color: var(--white); font-size: 16px; margin-bottom: 6px; }
+  #error p { color: var(--blue-text); font-size: 14px; word-break: break-word; }
+
+  /* pin gate */
+  #pin h2 { color: var(--white); font-size: 16px; margin-bottom: 6px; }
+  #pin p { color: var(--blue-text); font-size: 13px; }
+  .pin-input {
+    display: block; width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--blue-border);
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 18px; text-align: center; letter-spacing: 4px;
+    padding: 12px 14px; margin: 14px 0;
+    font-family: inherit;
+  }
+  .pin-input:focus { outline: none; border-color: var(--blue); }
+
+  /* result */
+  .total-card { text-align: center; }
+  .total-label { color: var(--blue-text); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .total-num { font-size: 54px; font-weight: 800; letter-spacing: -1px; margin: 2px 0; color: var(--white); }
+  .total-num small { font-size: 20px; font-weight: 600; color: var(--blue-text); }
+  .total-range { color: var(--blue-text); font-size: 14px; }
+
+  .item {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 13px 0;
+    border-bottom: 1px solid var(--blue-border);
+  }
+  .item:last-child { border-bottom: none; }
+  .item-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; color: var(--white); }
+  .item-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--blue-text); font-size: 12px; }
+  .pill {
+    font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 99px;
+    border: 1px solid var(--blue-border);
+    color: var(--blue-text);
+  }
+  .pill.db { background: var(--blue); border-color: var(--blue); color: var(--white); }
+  .item-kcal { text-align: right; white-space: nowrap; }
+  .item-kcal b { font-size: 17px; color: var(--white); }
+  .item-kcal span { display: block; color: var(--blue-text); font-size: 12px; }
+
+  .footnote { color: var(--blue-text); font-size: 12.5px; line-height: 1.5; }
+  .footnote b { color: var(--white); }
+
+  .again-btn {
+    display: block; width: 100%; text-align: center;
+    background: none;
+    border: 1px solid var(--blue);
+    color: var(--blue-text); font-size: 16px; font-weight: 600;
+    padding: 14px; border-radius: 12px; cursor: pointer; margin-top: 4px;
+  }
+  .again-btn:active { transform: scale(0.98); }
+
+  .empty { text-align: center; padding: 10px 0; }
+  .empty .big { font-size: 40px; margin-bottom: 8px; }
+  .empty p { color: var(--blue-text); font-size: 14px; }
+
+  footer { text-align: center; color: var(--blue-text); font-size: 11.5px; margin-top: 26px; opacity: 0.75; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img id="logo" src="/static/logo.png" alt="ANOVATOR"
+         onload="var w = document.getElementById('wordmark'); if (w) w.style.display = 'none';"
+         onerror="this.style.display='none'">
+    <div id="wordmark" role="img" aria-label="ANOVATOR">AN<span class="o"></span>VATOR</div>
+    <h1>CalorieCam</h1>
+    <p>Snap your food. Get the damage.</p>
+  </header>
+
+  <section id="intro">
+    <div class="card">
+      <label class="snap-btn" for="photo-input">&#128247; Snap or pick a photo</label>
+      <input id="photo-input" type="file" accept="image/*" capture="environment">
+      <p class="hint">Get the whole plate in frame &mdash; a fork or your hand helps me judge portion size.</p>
+    </div>
+  </section>
+
+  <section id="loading" class="card hidden">
+    <div class="dots"><i></i><i></i><i></i></div>
+    <div id="loading-msg">Uploading photo&hellip;</div>
+    <div id="loading-sub">usually takes 10&ndash;30 seconds</div>
+  </section>
+
+  <section id="error" class="card hidden">
+    <h2>Couldn't analyze that</h2>
+    <p id="error-msg"></p>
+  </section>
+
+  <section id="pin" class="card hidden">
+    <h2>Access PIN</h2>
+    <p>This server is protected. Enter the PIN, then snap your photo again.</p>
+    <input class="pin-input" id="pin-input" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN">
+    <button class="snap-btn" id="pin-save" type="button">Unlock</button>
+  </section>
+
+  <section id="result" class="hidden"></section>
+
+  <button id="again" class="again-btn hidden">&#128247; Analyze another</button>
+
+  <footer>Estimates are ranges on purpose &mdash; portion size from one photo is never exact.</footer>
+</div>
+
+<script>
+(function () {
+  const input = document.getElementById("photo-input");
+  const views = {
+    intro: document.getElementById("intro"),
+    loading: document.getElementById("loading"),
+    error: document.getElementById("error"),
+    pin: document.getElementById("pin"),
+    result: document.getElementById("result"),
+  };
+  const againBtn = document.getElementById("again");
+  const loadingMsg = document.getElementById("loading-msg");
+  const pinInput = document.getElementById("pin-input");
+  const PIN_KEY = "caloriecam_pin";
+  const PHRASES = [
+    "Identifying the food…",
+    "Judging portion sizes…",
+    "Checking the food database…",
+    "Counting hidden butter…",
+    "Crunching the numbers…",
+  ];
+  let rotator = null;
+
+  function show(name) {
+    for (const key of Object.keys(views)) views[key].classList.toggle("hidden", key !== name);
+    againBtn.classList.toggle("hidden", !(name === "error" || name === "result"));
+  }
+
+  function startLoading() {
+    let i = 0;
+    loadingMsg.textContent = "Uploading photo…";
+    rotator = setInterval(() => {
+      loadingMsg.textContent = PHRASES[i % PHRASES.length];
+      i += 1;
+    }, 2500);
+    show("loading");
+  }
+
+  function stopLoading() {
+    if (rotator) clearInterval(rotator);
+    rotator = null;
+  }
+
+  function showError(message) {
+    stopLoading();
+    document.getElementById("error-msg").textContent = message;
+    show("error");
+  }
+
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function fmt(n) { return Math.round(n).toLocaleString(); }
+
+  function renderResult(data) {
+    stopLoading();
+    const root = views.result;
+    root.innerHTML = "";
+
+    if (!data.items || data.items.length === 0) {
+      const card = el("div", "card empty");
+      card.appendChild(el("div", "big", "🤔"));
+      card.appendChild(el("p", null, data.notes || "No food or drink detected in that photo."));
+      root.appendChild(card);
+      show("result");
+      return;
+    }
+
+    const total = el("div", "card total-card");
+    total.appendChild(el("div", "total-label", "Total estimate"));
+    const num = el("div", "total-num", fmt(data.total_kcal.mid) + " ");
+    num.appendChild(el("small", null, "kcal"));
+    total.appendChild(num);
+    total.appendChild(
+      el("div", "total-range", fmt(data.total_kcal.low) + " – " + fmt(data.total_kcal.high) + " kcal likely range")
+    );
+    root.appendChild(total);
+
+    const list = el("div", "card");
+    for (const item of data.items) {
+      const row = el("div", "item");
+      const left = el("div");
+      const displayName =
+        item.brand && !item.name.toLowerCase().includes(item.brand.toLowerCase())
+          ? item.brand + " " + item.name
+          : item.name;
+      left.appendChild(el("div", "item-name", displayName));
+      const meta = el("div", "item-meta");
+      meta.appendChild(el("span", null, fmt(item.grams) + " g"));
+      meta.appendChild(el("span", "pill " + item.confidence, item.confidence));
+      if (item.source && item.source !== "model_estimate") {
+        meta.appendChild(el("span", "pill db", "✓ food db"));
+      }
+      left.appendChild(meta);
+      const right = el("div", "item-kcal");
+      right.appendChild(el("b", null, fmt(item.kcal.mid)));
+      right.appendChild(el("span", null, fmt(item.kcal.low) + "–" + fmt(item.kcal.high)));
+      row.appendChild(left);
+      row.appendChild(right);
+      list.appendChild(row);
+    }
+    root.appendChild(list);
+
+    if (data.scale_reference || data.notes) {
+      const foot = el("div", "card footnote");
+      if (data.scale_reference) {
+        const p1 = el("div");
+        p1.appendChild(el("b", null, "Scale reference: "));
+        p1.appendChild(document.createTextNode(data.scale_reference));
+        foot.appendChild(p1);
+      }
+      if (data.notes) {
+        const p2 = el("div");
+        p2.appendChild(el("b", null, "Notes: "));
+        p2.appendChild(document.createTextNode(data.notes));
+        foot.appendChild(p2);
+      }
+      root.appendChild(foot);
+    }
+
+    show("result");
+  }
+  window.renderResult = renderResult; // exposed for testing
+
+  input.addEventListener("change", async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    startLoading();
+    const form = new FormData();
+    form.append("photo", file, file.name || "photo.jpg");
+    const pin = localStorage.getItem(PIN_KEY);
+    const headers = pin ? { "X-CalorieCam-Pin": pin } : {};
+    try {
+      const res = await fetch("/api/estimate", { method: "POST", body: form, headers: headers });
+      let data = null;
+      try { data = await res.json(); } catch (_) { /* non-JSON error body */ }
+      if (res.status === 401) {
+        stopLoading();
+        pinInput.value = "";
+        show("pin");
+        pinInput.focus();
+        return;
+      }
+      if (!res.ok) {
+        throw new Error((data && data.detail) || "The server returned an error (" + res.status + ").");
+      }
+      renderResult(data);
+    } catch (err) {
+      showError(err.message || "Network error - is the server still running?");
+    } finally {
+      input.value = "";
+    }
+  });
+
+  document.getElementById("pin-save").addEventListener("click", () => {
+    const value = pinInput.value.trim();
+    if (!value) { pinInput.focus(); return; }
+    localStorage.setItem(PIN_KEY, value);
+    pinInput.value = "";
+    show("intro");
+  });
+
+  againBtn.addEventListener("click", () => show("intro"));
+})();
+</script>
+</body>
+</html>

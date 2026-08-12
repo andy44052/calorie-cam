@@ -1,0 +1,9 @@
+anthropic>=0.116.0
+pydantic>=2.7
+pillow>=10.4
+pillow-heif>=0.18
+python-dotenv>=1.0
+pytest>=8.2
+fastapi>=0.115
+uvicorn>=0.30
+python-multipart>=0.0.9

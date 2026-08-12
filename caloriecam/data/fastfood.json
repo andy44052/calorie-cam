@@ -1,0 +1,125 @@
+{
+  "provenance": "Compiled by the project owner from USDA data, restaurant disclosures, and aggregated sources (2026-08). Values are typical/approximate; ranges kept where the source gave ranges.",
+  "menu_items": [
+    {
+      "item": "French fries (small)",
+      "brand": "McDonald's",
+      "aliases": ["small fries", "small french fries", "fries small"],
+      "kcal": {"low": 230, "mid": 230, "high": 230},
+      "serving_g": 75,
+      "unit_scalable": false
+    },
+    {
+      "item": "French fries (medium)",
+      "brand": "McDonald's",
+      "aliases": ["medium fries", "medium french fries", "fries medium"],
+      "kcal": {"low": 320, "mid": 340, "high": 365},
+      "serving_g": 115,
+      "unit_scalable": false
+    },
+    {
+      "item": "French fries (large)",
+      "brand": "McDonald's",
+      "aliases": ["large fries", "large french fries", "fries large"],
+      "kcal": {"low": 480, "mid": 480, "high": 480},
+      "serving_g": 152,
+      "unit_scalable": false
+    },
+    {
+      "item": "Hamburger or cheeseburger (single patty)",
+      "brand": null,
+      "aliases": ["hamburger", "cheeseburger", "plain burger", "single burger"],
+      "kcal": {"low": 250, "mid": 275, "high": 300},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Big Mac",
+      "brand": "McDonald's",
+      "aliases": ["big mac"],
+      "kcal": {"low": 560, "mid": 575, "high": 590},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Whopper",
+      "brand": "Burger King",
+      "aliases": ["whopper"],
+      "kcal": {"low": 670, "mid": 690, "high": 710},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Double Whopper",
+      "brand": "Burger King",
+      "aliases": ["double whopper"],
+      "kcal": {"low": 920, "mid": 950, "high": 980},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Whopper Jr",
+      "brand": "Burger King",
+      "aliases": ["whopper jr", "whopper junior"],
+      "kcal": {"low": 340, "mid": 340, "high": 340},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Fried chicken sandwich",
+      "brand": null,
+      "aliases": ["chicken sandwich", "fried chicken sandwich", "crispy chicken sandwich"],
+      "kcal": {"low": 400, "mid": 550, "high": 700},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Chicken burrito or bowl",
+      "brand": null,
+      "aliases": ["burrito", "chicken burrito", "burrito bowl", "chicken bowl"],
+      "kcal": {"low": 500, "mid": 650, "high": 800},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Loaded burrito or bowl (extra rice, cheese, guac, sour cream)",
+      "brand": null,
+      "aliases": ["loaded burrito", "loaded bowl", "loaded burrito bowl"],
+      "kcal": {"low": 1000, "mid": 1100, "high": 1200},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Egg McMuffin",
+      "brand": "McDonald's",
+      "aliases": ["egg mcmuffin"],
+      "kcal": {"low": 310, "mid": 310, "high": 310},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Breakfast biscuit or croissant sandwich",
+      "brand": null,
+      "aliases": ["breakfast sandwich", "sausage biscuit", "bacon egg biscuit", "breakfast croissant", "sausage egg croissant"],
+      "kcal": {"low": 500, "mid": 600, "high": 700},
+      "serving_g": null,
+      "unit_scalable": false
+    },
+    {
+      "item": "Cheese pizza slice (hand-tossed)",
+      "brand": null,
+      "aliases": ["cheese pizza", "pizza slice", "cheese pizza slice", "slice pizza"],
+      "kcal": {"low": 200, "mid": 245, "high": 290},
+      "serving_g": 107,
+      "unit_scalable": true
+    },
+    {
+      "item": "Pepperoni pizza slice (hand-tossed)",
+      "brand": null,
+      "aliases": ["pepperoni pizza", "pepperoni pizza slice", "pepperoni slice"],
+      "kcal": {"low": 230, "mid": 280, "high": 330},
+      "serving_g": 113,
+      "unit_scalable": true
+    }
+  ]
+}
