@@ -42,6 +42,15 @@ def to_text(meal: MealEstimate, source: str) -> str:
             f"{'TOTAL':<{width}}           ~{meal.total_mid:>4d} kcal  "
             f"({meal.total_low}-{meal.total_high})"
         )
+    if meal.debate and meal.debate.get("challenges"):
+        rulings = meal.debate.get("rulings", [])
+        corrections = sum(
+            1 for r in rulings if r.get("verdict") in ("accepted", "partially_accepted")
+        )
+        lines.append(
+            f"debate: {len(meal.debate['challenges'])} challenge(s) raised - "
+            f"{corrections} led to corrections, {len(rulings) - corrections} rejected"
+        )
     if meal.scale_reference:
         lines.append(f"scale reference: {meal.scale_reference}")
     if meal.notes:
@@ -76,4 +85,5 @@ def to_dict(meal: MealEstimate, source: str) -> dict:
         ],
         "scale_reference": meal.scale_reference,
         "notes": meal.notes,
+        "debate": meal.debate,
     }

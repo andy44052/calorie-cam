@@ -34,12 +34,20 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help='extra context the photo cannot show, e.g. "cooked in olive oil"',
     )
+    parser.add_argument(
+        "--no-debate",
+        dest="debate",
+        action="store_false",
+        help="skip the adversarial second-opinion pass (faster, cheaper, less accurate)",
+    )
     args = parser.parse_args(argv)
 
     failures = 0
     for image in args.images:
         try:
-            meal, _analysis = pipeline.run(image, model=args.model, hint=args.hint)
+            meal, _analysis = pipeline.run(
+                image, model=args.model, hint=args.hint, debate=args.debate
+            )
         except FileNotFoundError:
             print(f"error: file not found: {image}", file=sys.stderr)
             failures += 1

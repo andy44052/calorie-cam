@@ -50,6 +50,8 @@ class MealEstimate:
     total_high: int
     scale_reference: Optional[str]
     notes: Optional[str]
+    # Adversarial-review record (challenges + rulings); None when no debate ran.
+    debate: Optional[dict] = None
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:

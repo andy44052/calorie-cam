@@ -130,26 +130,24 @@ def build_messages(
     ]
 
 
-def analyze_image(
-    source: str | Path | BinaryIO,
-    model: str = DEFAULT_MODEL,
-    client: anthropic.Anthropic | None = None,
-    max_px: int = MAX_IMAGE_PX,
-    hint: str | None = None,
-) -> FoodAnalysis:
-    """Run the vision call and return the validated FoodAnalysis."""
-    if hint:
-        hint = hint.strip()[:HINT_MAX_CHARS] or None
-    image_b64, media_type = prepare_image(source, max_px=max_px)
+def structured_call(
+    client,
+    model: str,
+    max_tokens: int,
+    system: str,
+    messages: list[dict],
+    output_format,
+):
+    """One structured-output API call with refusal/empty handling."""
     if client is None:
         client = anthropic.Anthropic()
 
     response = client.messages.parse(
         model=model,
-        max_tokens=MAX_TOKENS,
-        system=SYSTEM_PROMPT,
-        messages=build_messages(image_b64, media_type, hint=hint),
-        output_format=FoodAnalysis,
+        max_tokens=max_tokens,
+        system=system,
+        messages=messages,
+        output_format=output_format,
     )
 
     stop_reason = getattr(response, "stop_reason", None)
@@ -164,3 +162,37 @@ def analyze_image(
             f"model returned no parseable analysis (stop_reason={stop_reason})"
         )
     return parsed
+
+
+def analyze_prepared(
+    image_b64: str,
+    media_type: str,
+    model: str = DEFAULT_MODEL,
+    client: anthropic.Anthropic | None = None,
+    hint: str | None = None,
+) -> FoodAnalysis:
+    """Run the vision analysis on an already-prepared image."""
+    if hint:
+        hint = hint.strip()[:HINT_MAX_CHARS] or None
+    return structured_call(
+        client=client,
+        model=model,
+        max_tokens=MAX_TOKENS,
+        system=SYSTEM_PROMPT,
+        messages=build_messages(image_b64, media_type, hint=hint),
+        output_format=FoodAnalysis,
+    )
+
+
+def analyze_image(
+    source: str | Path | BinaryIO,
+    model: str = DEFAULT_MODEL,
+    client: anthropic.Anthropic | None = None,
+    max_px: int = MAX_IMAGE_PX,
+    hint: str | None = None,
+) -> FoodAnalysis:
+    """Run the vision call and return the validated FoodAnalysis."""
+    image_b64, media_type = prepare_image(source, max_px=max_px)
+    return analyze_prepared(
+        image_b64, media_type, model=model, client=client, hint=hint
+    )

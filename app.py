@@ -47,6 +47,13 @@ def _required_pin() -> str:
     return os.environ.get("CALORIECAM_PIN", "").strip()
 
 
+def _debate_enabled() -> bool:
+    """Adversarial review is on unless CALORIECAM_DEBATE is off/0/false/no."""
+    return os.environ.get("CALORIECAM_DEBATE", "on").strip().lower() not in {
+        "off", "0", "false", "no",
+    }
+
+
 @app.post("/api/estimate")
 async def estimate(
     photo: UploadFile = File(...),
@@ -66,7 +73,9 @@ async def estimate(
         raise HTTPException(status_code=413, detail="Image too large (15 MB max).")
 
     try:
-        meal, _analysis = pipeline.run_bytes(data, hint=hint.strip() or None)
+        meal, _analysis = pipeline.run_bytes(
+            data, hint=hint.strip() or None, debate=_debate_enabled()
+        )
     except UnidentifiedImageError:
         raise HTTPException(status_code=400, detail="That file is not a readable image.")
     except RefusalError as exc:

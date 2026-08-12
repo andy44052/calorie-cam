@@ -272,18 +272,22 @@ def test_unmatched_item_stays_model_estimate():
 
 
 class _FakeMessages:
-    def __init__(self, response):
-        self._response = response
+    def __init__(self, analysis):
+        self._analysis = analysis
 
     def parse(self, **kwargs):
-        return self._response
+        from caloriecam.debate import Critique
+
+        if kwargs["output_format"] is Critique:
+            parsed = Critique(challenges=[], overall_assessment="draft is sound")
+        else:
+            parsed = self._analysis
+        return SimpleNamespace(parsed_output=parsed, stop_reason="end_turn")
 
 
 class FakeClient:
     def __init__(self, analysis):
-        self.messages = _FakeMessages(
-            SimpleNamespace(parsed_output=analysis, stop_reason="end_turn")
-        )
+        self.messages = _FakeMessages(analysis)
 
 
 def test_pipeline_applies_database(photo_path):
