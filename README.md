@@ -31,7 +31,14 @@ two URLs:
 - `http://localhost:8000` - on this PC
 - `http://<your-lan-ip>:8000` - open this on your phone (same Wi-Fi)
 
-Tap **Snap or pick a photo**, take the picture, wait ~10-30 s, get the breakdown.
+Tap **Snap or pick a photo**, take the picture, wait ~20-60 s, get the breakdown.
+
+Every analysis is **adversarially reviewed**: a skeptic pass challenges the
+draft (missed sauces, undercounted portions, hallucinated items) and the lead
+analyst must rule on each challenge with a stated reason before the final
+numbers come back. The result shows how many challenges were raised and how
+many led to corrections. Disable with `--no-debate` (CLI) or
+`CALORIECAM_DEBATE=off` (server env) to cut cost/latency to a single call.
 The optional **"Anything the camera can't see?"** box feeds extra knowledge into
 the analysis - cooking oil, "all organic", "double chicken", "diet soda" - and
 the model weights it as ground truth over visual guesses (but it can never
