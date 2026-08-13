@@ -16,7 +16,6 @@ entry itself is a combined dish that absorbs ingredient words (loose_match).
 import json
 import re
 from dataclasses import dataclass
-from difflib import SequenceMatcher
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
@@ -45,7 +44,8 @@ _MODIFIERS = frozenset({
     "small", "medium", "large", "big", "mini", "regular", "whole", "half",
     "skinless", "boneless", "hot", "cold", "warm", "iced", "leftover",
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-    "ten", "single", "couple", "few",
+    "ten", "single", "couple", "few", "toasted", "seasoned", "type",
+    "mixed", "marinated", "assorted", "cured",
 })
 
 # Per-unit items (pizza slices, tacos): scale the kcal by count when the
@@ -73,9 +73,11 @@ def _norm(text: str) -> str:
 
 
 def _stem(token: str) -> str:
-    # Cheap plural folding: "eggs"->"egg", "slices"->"slice". Both sides of
+    # Cheap plural folding: "eggs"->"egg", "potatoes"->"potato". Both sides of
     # every comparison go through this, so consistency matters more than
     # linguistic correctness.
+    if len(token) > 4 and token.endswith("oes"):
+        return token[:-2]
     if len(token) > 3 and token.endswith("s") and not token.endswith("ss"):
         return token[:-1]
     return token
@@ -93,7 +95,6 @@ def _leftover_allowed(leftover: frozenset, extra_ok: frozenset) -> bool:
 
 def _score(
     item_tokens: frozenset,
-    item_norm: str,
     candidate: str,
     loose: bool,
     extra_ok: frozenset,
@@ -107,24 +108,25 @@ def _score(
         if loose or _leftover_allowed(item_tokens - b, extra_ok):
             return 0.95
         # A smaller food name inside a bigger dish name ("banana" in "banana
-        # bread"): never let the string-similarity ratio rescue it.
+        # bread") must not match.
         return len(item_tokens & b) / len(item_tokens | b)
-    jaccard = len(item_tokens & b) / len(item_tokens | b)
-    ratio = SequenceMatcher(None, item_norm, _norm(candidate)).ratio()
-    return max(jaccard, ratio)
+    # Word-overlap only. Character-level similarity was removed deliberately:
+    # it matched "chicken broth" to "chicken burrito" and "beef stew" to
+    # "beef steak" - letters lie about food.
+    return len(item_tokens & b) / len(item_tokens | b)
 
 
 def _entry_score(item_name: str, entry: dict, extra_ok: frozenset = frozenset()) -> float:
     item_tokens = _tokens(item_name)
-    if any(t in item_tokens for t in entry.get("exclude_tokens", [])):
+    # Item tokens are stemmed, so exclude tokens must be stemmed too or
+    # plural excludes ("fries") silently never fire.
+    if any(_stem(t) in item_tokens for t in entry.get("exclude_tokens", [])):
         return 0.0
-    item_norm = _norm(item_name)
     loose = bool(entry.get("loose_match"))
     display = entry.get("item") or entry.get("name") or ""
     candidates = [display, *entry.get("aliases", [])]
     return max(
-        _score(item_tokens, item_norm, candidate, loose, extra_ok)
-        for candidate in candidates
+        _score(item_tokens, candidate, loose, extra_ok) for candidate in candidates
     )
 
 
@@ -143,6 +145,11 @@ def _generic_foods() -> tuple[dict, ...]:
 def _brand_ok(item: FoodItem, entry: dict) -> bool:
     entry_brand = entry.get("brand")
     if not entry_brand:
+        return True
+    if entry.get("iconic") and not (item.brand or "").strip():
+        # The item NAME is globally unambiguous (Big Mac, Whopper), so a
+        # missing brand field is fine - but a stated conflicting brand still
+        # blocks below.
         return True
     wanted = _tokens(entry_brand)
     present = _tokens(item.brand or "") | _tokens(item.name)
@@ -165,6 +172,11 @@ def match_menu_item(item: FoodItem) -> Optional[Resolution]:
         # mismatch signal.
         extra_ok = _tokens(entry.get("brand") or "")
         score = _entry_score(item.name, entry, extra_ok)
+        # A brand-specific entry whose brand check passed outranks a brandless
+        # entry at the same score ("In-N-Out Cheeseburger" -> the In-N-Out
+        # entry, not the generic hamburger).
+        if score >= MENU_THRESHOLD and entry.get("brand"):
+            score += 0.01
         if score > best_score:
             best, best_score = entry, score
     if best is None or best_score < MENU_THRESHOLD:

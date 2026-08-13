@@ -1,5 +1,5 @@
 {
-  "provenance": "Compiled by the project owner from USDA data, restaurant disclosures, and aggregated sources (2026-08). Values are typical/approximate; ranges kept where the source gave ranges. loose_match lets a combined item absorb ingredient words; exclude_tokens blocks words that change the item (double, deluxe, meal).",
+  "provenance": "Compiled by the project owner from USDA data, restaurant disclosures, and aggregated sources (2026-08). In-N-Out and Five Guys values from published nutrition data. loose_match lets a combined item absorb ingredient words; exclude_tokens blocks words that change the item; iconic means the item name alone identifies it without brand confirmation.",
   "menu_items": [
     {
       "item": "French fries (small)",
@@ -30,10 +30,86 @@
       "brand": null,
       "aliases": ["hamburger", "cheeseburger", "plain burger", "single burger", "burger"],
       "kcal": {"low": 250, "mid": 275, "high": 300},
-      "serving_g": null,
-      "unit_scalable": false,
+      "serving_g": 170,
+      "unit_scalable": true,
       "loose_match": true,
-      "exclude_tokens": ["double", "triple", "meal", "combo", "whopper", "mac"]
+      "exclude_tokens": ["double", "triple", "meal", "combo", "whopper", "mac", "bacon", "patty", "fries", "ramen"]
+    },
+    {
+      "item": "Hamburger",
+      "brand": "In-N-Out",
+      "aliases": ["hamburger", "in n out hamburger", "in n out burger"],
+      "kcal": {"low": 390, "mid": 390, "high": 390},
+      "serving_g": 243,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["double", "cheese", "cheeseburger", "meal", "combo", "animal", "protein"]
+    },
+    {
+      "item": "Cheeseburger",
+      "brand": "In-N-Out",
+      "aliases": ["cheeseburger", "in n out cheeseburger"],
+      "kcal": {"low": 480, "mid": 480, "high": 480},
+      "serving_g": 268,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["double", "meal", "combo", "animal", "protein"]
+    },
+    {
+      "item": "Double-Double",
+      "brand": "In-N-Out",
+      "aliases": ["double double", "double double burger", "double double cheeseburger"],
+      "kcal": {"low": 670, "mid": 670, "high": 670},
+      "serving_g": 330,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["meal", "combo", "animal", "protein"]
+    },
+    {
+      "item": "French Fries",
+      "brand": "In-N-Out",
+      "aliases": ["fries", "french fries", "in n out fries"],
+      "kcal": {"low": 395, "mid": 395, "high": 395},
+      "serving_g": 125,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["animal"]
+    },
+    {
+      "item": "Hamburger",
+      "brand": "Five Guys",
+      "aliases": ["hamburger", "five guys hamburger", "five guys burger"],
+      "kcal": {"low": 700, "mid": 700, "high": 700},
+      "serving_g": 303,
+      "unit_scalable": true,
+      "exclude_tokens": ["little", "meal", "combo", "cheese", "cheeseburger", "bacon"]
+    },
+    {
+      "item": "Cheeseburger",
+      "brand": "Five Guys",
+      "aliases": ["cheeseburger", "five guys cheeseburger"],
+      "kcal": {"low": 840, "mid": 840, "high": 840},
+      "serving_g": 330,
+      "unit_scalable": true,
+      "exclude_tokens": ["little", "meal", "combo", "bacon"]
+    },
+    {
+      "item": "Little Hamburger",
+      "brand": "Five Guys",
+      "aliases": ["little hamburger", "little burger"],
+      "kcal": {"low": 480, "mid": 480, "high": 480},
+      "serving_g": 202,
+      "unit_scalable": true,
+      "exclude_tokens": ["cheese", "meal", "combo", "bacon"]
+    },
+    {
+      "item": "Little Cheeseburger",
+      "brand": "Five Guys",
+      "aliases": ["little cheeseburger"],
+      "kcal": {"low": 550, "mid": 550, "high": 550},
+      "serving_g": 228,
+      "unit_scalable": true,
+      "exclude_tokens": ["meal", "combo", "bacon"]
     },
     {
       "item": "Big Mac",
@@ -42,6 +118,7 @@
       "kcal": {"low": 560, "mid": 575, "high": 590},
       "serving_g": null,
       "unit_scalable": false,
+      "iconic": true,
       "exclude_tokens": ["meal", "combo"]
     },
     {
@@ -51,6 +128,7 @@
       "kcal": {"low": 670, "mid": 690, "high": 710},
       "serving_g": null,
       "unit_scalable": false,
+      "iconic": true,
       "exclude_tokens": ["double", "jr", "junior", "meal", "combo"]
     },
     {
@@ -60,6 +138,7 @@
       "kcal": {"low": 920, "mid": 950, "high": 980},
       "serving_g": null,
       "unit_scalable": false,
+      "iconic": true,
       "exclude_tokens": ["meal", "combo"]
     },
     {
@@ -69,6 +148,7 @@
       "kcal": {"low": 340, "mid": 340, "high": 340},
       "serving_g": null,
       "unit_scalable": false,
+      "iconic": true,
       "exclude_tokens": ["meal", "combo"]
     },
     {
@@ -79,7 +159,7 @@
       "serving_g": null,
       "unit_scalable": false,
       "loose_match": true,
-      "exclude_tokens": ["double", "deluxe", "meal", "combo"]
+      "exclude_tokens": ["double", "deluxe", "meal", "combo", "grilled", "breast", "baked", "rice"]
     },
     {
       "item": "Chicken burrito or bowl",
@@ -89,7 +169,7 @@
       "serving_g": null,
       "unit_scalable": false,
       "loose_match": true,
-      "exclude_tokens": ["loaded", "double"]
+      "exclude_tokens": ["loaded", "double", "bean", "breakfast", "california", "sushi", "veggie", "vegetarian", "broth"]
     },
     {
       "item": "Loaded burrito or bowl (extra rice, cheese, guac, sour cream)",
@@ -108,7 +188,7 @@
       "serving_g": 78,
       "unit_scalable": true,
       "loose_match": true,
-      "exclude_tokens": ["salad", "bowl"]
+      "exclude_tokens": ["salad", "bowl", "soup"]
     },
     {
       "item": "Egg McMuffin",
@@ -117,6 +197,7 @@
       "kcal": {"low": 310, "mid": 310, "high": 310},
       "serving_g": null,
       "unit_scalable": false,
+      "iconic": true,
       "exclude_tokens": ["meal", "combo"]
     },
     {
@@ -127,7 +208,7 @@
       "serving_g": null,
       "unit_scalable": false,
       "loose_match": true,
-      "exclude_tokens": ["meal", "combo"]
+      "exclude_tokens": ["meal", "combo", "muffin"]
     },
     {
       "item": "Cheese pizza slice (hand-tossed)",
