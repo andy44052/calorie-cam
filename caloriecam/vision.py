@@ -40,8 +40,20 @@ are separate items.
 packaged snack with a visible label), set "brand" to the chain/brand and name \
 the item as precisely as you can (e.g. brand "McDonald's", name "Big Mac").
 
+Frame scope:
+- Estimate ONLY items that are fully or mostly (more than half) visible in the \
+photo. If food is cut off at the edge of the frame, exclude it and mention the \
+exclusion in "overall_notes". Every analysis of the same photo must draw the \
+same boundary.
+
 Portions:
 - Estimate edible weight in grams. For liquids use 1 ml = 1 g.
+- COUNT FIRST when the food is made of discrete units (grapes, berries, sushi \
+pieces, tacos, eggs, cookies, nuggets, meatballs, pizza slices): count the \
+units you can see, estimate hidden ones conservatively, set "unit_count", and \
+compute grams as count x typical per-unit weight. State the count and \
+per-unit weight in the item's assumptions. For bulk foods (rice, pasta, \
+mashed potatoes, sauces) set "unit_count" to null.
 - Judge scale from visible references: a dinner plate is ~27 cm across, a fork \
 is ~19 cm long, a 12 oz can is ~12 cm tall, an adult hand is ~18 cm. Report \
 which reference you used in "scale_reference".

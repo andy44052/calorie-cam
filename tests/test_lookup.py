@@ -6,7 +6,7 @@ from caloriecam.sanity import SOURCE_DB_BRANDED, SOURCE_DB_GENERIC, SOURCE_MODEL
 from caloriecam.schema import FoodAnalysis, FoodItem
 
 
-def _food(name, grams=100.0, kcal=200.0, confidence="high", brand=None) -> FoodItem:
+def _food(name, grams=100.0, kcal=200.0, confidence="high", brand=None, unit_count=None) -> FoodItem:
     return FoodItem(
         name=name,
         portion_description="a portion",
@@ -15,6 +15,7 @@ def _food(name, grams=100.0, kcal=200.0, confidence="high", brand=None) -> FoodI
         confidence=confidence,
         assumptions=[],
         brand=brand,
+        unit_count=unit_count,
     )
 
 
@@ -224,6 +225,23 @@ def test_taco_count_scaling():
     assert res is not None
     assert res.count == 3
     assert res.kcal_mid == 170  # per-unit; sanity layer multiplies by count
+
+
+def test_stated_unit_count_beats_gram_inference():
+    # Model counted 3 slices but lowballed grams - trust the count
+    res = match_menu_item(_food("pepperoni pizza", grams=150, unit_count=3))
+    assert res is not None and res.count == 3
+
+
+def test_stated_unit_count_of_one_prevents_false_doubling():
+    # One giant 230g slice, explicitly counted as 1 - no phantom second slice
+    res = match_menu_item(_food("pepperoni pizza", grams=230, unit_count=1))
+    assert res is not None and res.count == 1
+
+
+def test_absurd_unit_count_falls_back_to_grams():
+    res = match_menu_item(_food("pepperoni pizza", grams=230, unit_count=50))
+    assert res is not None and res.count == 2  # grams-ratio fallback
 
 
 # --- regressions from the 23-image benchmark (2026-08-13) --------------------

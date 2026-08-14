@@ -185,9 +185,15 @@ def match_menu_item(item: FoodItem) -> Optional[Resolution]:
     count = 1
     serving = best.get("serving_g")
     if best.get("unit_scalable") and serving:
-        ratio = item.estimated_grams / serving
-        if ratio >= _SCALE_MIN_RATIO:
-            count = min(_MAX_UNITS, max(1, round(ratio)))
+        stated = getattr(item, "unit_count", None)
+        if stated and 1 <= stated <= _MAX_UNITS:
+            # The model counted the units in the photo - trust that over
+            # inferring a count from the gram estimate.
+            count = stated
+        else:
+            ratio = item.estimated_grams / serving
+            if ratio >= _SCALE_MIN_RATIO:
+                count = min(_MAX_UNITS, max(1, round(ratio)))
 
     kcal = best["kcal"]
     return Resolution(

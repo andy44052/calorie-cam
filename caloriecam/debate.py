@@ -80,7 +80,8 @@ the photo shows restaurant/fried/sauced preparation.
 
 Rules: every challenge needs a concrete argument from visible evidence or \
 strong priors - "looks small" is not an argument, "the burrito spans most of \
-a 27 cm plate, so 200 g is implausibly low" is. Do NOT invent objections to \
+a 27 cm plate, so 200 g is implausibly low" is. When an item states a \
+unit_count, verify the count against what you can actually count in the photo. Do NOT invent objections to \
 seem useful: if the draft is sound, return an empty challenges list. Respect \
 any user-provided context; do not challenge facts the user stated.
 """

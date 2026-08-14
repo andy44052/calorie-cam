@@ -18,6 +18,10 @@ class FoodItem(BaseModel):
     kcal_per_100g: float = Field(
         description="Calories per 100 g of this food as prepared (including cooking fat)"
     )
+    unit_count: Optional[int] = Field(
+        default=None,
+        description="Number of discrete units when the food is countable (grapes, sushi pieces, tacos, eggs, slices); null for bulk foods like rice or sauces",
+    )
     confidence: Literal["low", "medium", "high"] = Field(
         description="Confidence in both the identification and the portion estimate"
     )
