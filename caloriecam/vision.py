@@ -2,12 +2,14 @@
 
 import base64
 import io
+import time
 from pathlib import Path
 from typing import BinaryIO
 
 import anthropic
 from PIL import Image, ImageOps
 
+from . import usage as usage_mod
 from .config import DEFAULT_MODEL, HINT_MAX_CHARS, JPEG_QUALITY, MAX_IMAGE_PX, MAX_TOKENS
 from .schema import FoodAnalysis
 
@@ -45,6 +47,10 @@ Frame scope:
 photo. If food is cut off at the edge of the frame, exclude it and mention the \
 exclusion in "overall_notes". Every analysis of the same photo must draw the \
 same boundary.
+- When an item IS mostly visible but still extends past the frame edge, \
+estimate the portion INSIDE the frame only - never the whole object it belongs \
+to. A cheese wheel cropped by the edge is scored on the visible wedge, not the \
+whole wheel; state the visible fraction you assumed in that item's assumptions.
 
 Portions:
 - Estimate edible weight in grams. For liquids use 1 ml = 1 g.
@@ -149,11 +155,14 @@ def structured_call(
     system: str,
     messages: list[dict],
     output_format,
+    ledger=None,
+    stage: str = "analyze",
 ):
     """One structured-output API call with refusal/empty handling."""
     if client is None:
         client = anthropic.Anthropic()
 
+    started = time.monotonic()
     response = client.messages.parse(
         model=model,
         max_tokens=max_tokens,
@@ -161,6 +170,12 @@ def structured_call(
         messages=messages,
         output_format=output_format,
     )
+    if ledger is not None:
+        ledger.record(
+            usage_mod.from_response(
+                response, stage=stage, model=model, seconds=time.monotonic() - started
+            )
+        )
 
     stop_reason = getattr(response, "stop_reason", None)
     if stop_reason == "refusal":
@@ -182,6 +197,7 @@ def analyze_prepared(
     model: str = DEFAULT_MODEL,
     client: anthropic.Anthropic | None = None,
     hint: str | None = None,
+    ledger=None,
 ) -> FoodAnalysis:
     """Run the vision analysis on an already-prepared image."""
     if hint:
@@ -193,6 +209,8 @@ def analyze_prepared(
         system=SYSTEM_PROMPT,
         messages=build_messages(image_b64, media_type, hint=hint),
         output_format=FoodAnalysis,
+        ledger=ledger,
+        stage="analyze",
     )
 
 

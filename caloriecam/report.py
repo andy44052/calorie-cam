@@ -86,4 +86,5 @@ def to_dict(meal: MealEstimate, source: str) -> dict:
         "scale_reference": meal.scale_reference,
         "notes": meal.notes,
         "debate": meal.debate,
+        "usage": meal.usage,
     }

@@ -123,6 +123,7 @@ def criticize(
     model: str = DEFAULT_MODEL,
     client=None,
     hint: Optional[str] = None,
+    ledger=None,
 ) -> Critique:
     text = (
         "Here is the draft analysis to challenge:\n"
@@ -139,6 +140,8 @@ def criticize(
         system=CRITIC_SYSTEM,
         messages=messages,
         output_format=Critique,
+        ledger=ledger,
+        stage="critic",
     )
 
 
@@ -150,6 +153,7 @@ def revise(
     model: str = DEFAULT_MODEL,
     client=None,
     hint: Optional[str] = None,
+    ledger=None,
 ) -> DebatedAnalysis:
     text = (
         "Your draft analysis:\n"
@@ -168,6 +172,8 @@ def revise(
         system=REVISER_SYSTEM,
         messages=messages,
         output_format=DebatedAnalysis,
+        ledger=ledger,
+        stage="reviser",
     )
 
 
@@ -178,6 +184,7 @@ def run_debate(
     model: str = DEFAULT_MODEL,
     client=None,
     hint: Optional[str] = None,
+    ledger=None,
 ) -> tuple[FoodAnalysis, Optional[dict]]:
     """Challenge the draft; return (final_analysis, debate_record).
 
@@ -186,7 +193,9 @@ def run_debate(
     if not draft.items:
         return draft, None
 
-    critique = criticize(image_b64, media_type, draft, model=model, client=client, hint=hint)
+    critique = criticize(
+        image_b64, media_type, draft, model=model, client=client, hint=hint, ledger=ledger
+    )
     record = {
         "challenges": [c.model_dump() for c in critique.challenges],
         "assessment": critique.overall_assessment,
@@ -196,7 +205,21 @@ def run_debate(
         return draft, record
 
     debated = revise(
-        image_b64, media_type, draft, critique, model=model, client=client, hint=hint
+        image_b64,
+        media_type,
+        draft,
+        critique,
+        model=model,
+        client=client,
+        hint=hint,
+        ledger=ledger,
     )
     record["rulings"] = [r.model_dump() for r in debated.rulings]
+    # Per-verdict counts, not just a corrections tally: "partially accepted"
+    # is real pushback (the analyst moved less than demanded), so collapsing
+    # it into "accepted" would overstate how often the reviser rubber-stamps.
+    record["verdict_counts"] = {
+        verdict: sum(1 for r in debated.rulings if r.verdict == verdict)
+        for verdict in ("accepted", "partially_accepted", "rejected")
+    }
     return debated.final, record

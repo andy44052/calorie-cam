@@ -53,6 +53,11 @@ _MODIFIERS = frozenset({
 _SCALE_MIN_RATIO = 1.6
 _MAX_UNITS = 8
 
+# A stated unit_count is only trusted when count x serving_g lands within this
+# fraction of the model's own gram estimate (see the pan-pizza regression:
+# unit_count=3 visible slices vs grams=whole 630 g pan).
+_COUNT_GRAMS_TOLERANCE = 0.45
+
 
 @dataclass
 class Resolution:
@@ -186,14 +191,18 @@ def match_menu_item(item: FoodItem) -> Optional[Resolution]:
     serving = best.get("serving_g")
     if best.get("unit_scalable") and serving:
         stated = getattr(item, "unit_count", None)
+        ratio = item.estimated_grams / serving
+        implied = min(_MAX_UNITS, max(1, round(ratio))) if ratio >= _SCALE_MIN_RATIO else 1
         if stated and 1 <= stated <= _MAX_UNITS:
-            # The model counted the units in the photo - trust that over
-            # inferring a count from the gram estimate.
-            count = stated
+            # Trust the model's count only when its own gram estimate agrees.
+            # A stated 3 slices against a whole-pan gram figure means one of
+            # the two is wrong; the grams carry the calories, so they win.
+            if abs(stated * serving - item.estimated_grams) <= _COUNT_GRAMS_TOLERANCE * item.estimated_grams:
+                count = stated
+            else:
+                count = implied
         else:
-            ratio = item.estimated_grams / serving
-            if ratio >= _SCALE_MIN_RATIO:
-                count = min(_MAX_UNITS, max(1, round(ratio)))
+            count = implied
 
     kcal = best["kcal"]
     return Resolution(

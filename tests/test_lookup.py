@@ -227,16 +227,29 @@ def test_taco_count_scaling():
     assert res.kcal_mid == 170  # per-unit; sanity layer multiplies by count
 
 
-def test_stated_unit_count_beats_gram_inference():
-    # Model counted 3 slices but lowballed grams - trust the count
-    res = match_menu_item(_food("pepperoni pizza", grams=150, unit_count=3))
+def test_stated_unit_count_used_when_grams_agree():
+    # 3 slices x 113 g = 339 g, close enough to the stated 320 g
+    res = match_menu_item(_food("pepperoni pizza", grams=320, unit_count=3))
     assert res is not None and res.count == 3
 
 
-def test_stated_unit_count_of_one_prevents_false_doubling():
-    # One giant 230g slice, explicitly counted as 1 - no phantom second slice
-    res = match_menu_item(_food("pepperoni pizza", grams=230, unit_count=1))
+def test_count_grams_contradiction_falls_back_to_grams():
+    # img17 regression: model says 3 visible slices but grams = the whole pan.
+    # 3 x 107 = 321 g vs stated 630 g -> the grams win (6 slices).
+    res = match_menu_item(_food("cheese pizza", grams=630, unit_count=3))
+    assert res is not None and res.count == 6
+
+
+def test_single_unit_with_matching_grams_stays_one():
+    res = match_menu_item(_food("pepperoni pizza", grams=120, unit_count=1))
     assert res is not None and res.count == 1
+
+
+def test_oversized_single_unit_scales_by_mass():
+    # "1 slice" weighing 230 g is two database slices worth of pizza; calories
+    # follow mass, so the gram estimate wins over the stated count.
+    res = match_menu_item(_food("pepperoni pizza", grams=230, unit_count=1))
+    assert res is not None and res.count == 2
 
 
 def test_absurd_unit_count_falls_back_to_grams():
@@ -535,7 +548,10 @@ def test_branded_resolution_overrides_math():
     meal = evaluate(analysis, lookup.resolve_all(analysis.items))
     est = meal.items[0]
     assert est.source == SOURCE_DB_BRANDED
-    assert (est.kcal_low, est.kcal_mid, est.kcal_high) == (560, 575, 590)
+    assert est.kcal_mid == 575  # published value, unchanged
+    # Band widened past the published 560-590: our READING of the photo can be
+    # wrong even when the menu number is exact.
+    assert (est.kcal_low, est.kcal_high) == (529, 621)
     assert any("matched menu item" in a for a in est.assumptions)
 
 
@@ -544,9 +560,13 @@ def test_scaled_pizza_totals():
     analysis = FoodAnalysis(items=[item])
     meal = evaluate(analysis, lookup.resolve_all(analysis.items))
     est = meal.items[0]
-    assert (est.kcal_low, est.kcal_mid, est.kcal_high) == (460, 560, 660)
+    assert est.kcal_mid == 560  # 2 x 280
+    # Wider than 2x the published per-slice range because the count of 2 was
+    # inferred from grams, not read off a menu.
+    assert (est.kcal_low, est.kcal_high) == (448, 672)
     assert est.grams == 226  # 2 x 113 g slices
     assert any("x2" in a for a in est.assumptions)
+    assert any("miscount" in a for a in est.assumptions)
 
 
 def test_generic_resolution_replaces_density_keeps_grams():

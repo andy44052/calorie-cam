@@ -14,3 +14,7 @@ MAX_TOKENS = 16000
 # User-typed context ("cooked in olive oil", "double chicken") is capped so a
 # giant paste can't blow up the prompt.
 HINT_MAX_CHARS = 500
+
+# Photos with at most this many items, all at high confidence, skip the
+# adversarial debate: measured, the critic never found fault with them.
+SKIP_DEBATE_MAX_ITEMS = 3

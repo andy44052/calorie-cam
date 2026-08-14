@@ -18,6 +18,11 @@ if TYPE_CHECKING:
 CONFIDENCE_MARGIN = {"high": 0.15, "medium": 0.30, "low": 0.50}
 DEFAULT_MARGIN = 0.50
 
+# Even a published menu value carries risk from OUR reading of the photo
+# (wrong size/variant), plus count risk when several units were inferred.
+BRANDED_ITEM_MARGIN = 0.08
+BRANDED_COUNT_MARGIN = 0.12
+
 # Plausibility bounds. Pure oil is ~884 kcal/100g, so nothing edible exceeds ~900.
 GRAMS_MIN, GRAMS_MAX = 1.0, 2000.0
 KCAL_PER_100G_MIN, KCAL_PER_100G_MAX = 0.0, 900.0
@@ -52,6 +57,8 @@ class MealEstimate:
     notes: Optional[str]
     # Adversarial-review record (challenges + rulings); None when no debate ran.
     debate: Optional[dict] = None
+    # Token/cost accounting for the API calls this estimate cost.
+    usage: Optional[dict] = None
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:
@@ -85,6 +92,20 @@ def _evaluate_item(raw: FoodItem, res: "Optional[Resolution]") -> ItemEstimate:
         kcal_low = (res.kcal_low if res.kcal_low is not None else res.kcal_mid) * res.count
         kcal_high = (res.kcal_high if res.kcal_high is not None else res.kcal_mid) * res.count
         kcal_mid = res.kcal_mid * res.count
+
+        # Published per-item values are exact, but OUR reading of the photo is
+        # not: the item could be a different size/variant, and for multi-unit
+        # hits the count itself was inferred. Without this a branded meal
+        # reports a zero-width range - false precision.
+        spread = BRANDED_ITEM_MARGIN
+        if res.count > 1:
+            spread += BRANDED_COUNT_MARGIN
+            assumptions.append(
+                f"count of {res.count} inferred from the photo - a miscount moves this "
+                "item by one whole unit"
+            )
+        kcal_low = min(kcal_low, round(kcal_mid * (1 - spread)))
+        kcal_high = max(kcal_high, round(kcal_mid * (1 + spread)))
         return ItemEstimate(
             name=raw.name,
             grams=round(grams),
