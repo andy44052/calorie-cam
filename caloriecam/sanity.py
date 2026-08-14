@@ -8,6 +8,7 @@ low/mid/high kcal range. Everything here is pure Python and fully unit-tested.
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
+from . import units
 from .schema import FoodAnalysis, FoodItem
 
 if TYPE_CHECKING:
@@ -65,7 +66,51 @@ def _clamp(value: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, value))
 
 
+def _unit_band_grams(raw: FoodItem, assumptions: list[str]) -> Optional[float]:
+    """Recompute grams as count x per-unit weight, clamped to a known band.
+
+    Counts are the stable part of a countable-food estimate; the per-unit
+    weight is what drifts between runs. When we know the plausible weight of
+    one unit, the count pins the total.
+    """
+    count = raw.unit_count
+    if not count or count < 1:
+        return None
+
+    band = units.find_band(raw.name)
+    per_unit = raw.per_unit_grams
+    if per_unit is None or per_unit <= 0:
+        if band is None:
+            return None
+        # The model counted but never priced a unit: fall back to the typical.
+        per_unit = band.typical_g
+        assumptions.append(
+            f"per-unit weight not stated; used typical {per_unit:.0f} g for "
+            f"'{band.name}'"
+        )
+    elif band is not None:
+        clamped = band.clamp(per_unit)
+        if clamped != per_unit:
+            assumptions.append(
+                f"per-unit weight adjusted {per_unit:.0f} g -> {clamped:.0f} g "
+                f"(plausible range {band.low_g:.0f}-{band.high_g:.0f} g for "
+                f"'{band.name}')"
+            )
+            per_unit = clamped
+
+    grams = _clamp(count * per_unit, GRAMS_MIN, GRAMS_MAX)
+    if abs(grams - raw.estimated_grams) > 0.05 * max(grams, raw.estimated_grams):
+        assumptions.append(
+            f"portion recomputed as {count} x {per_unit:.0f} g = {grams:.0f} g "
+            f"(model stated {raw.estimated_grams:.0f} g)"
+        )
+    return grams
+
+
 def _clamped_grams(raw: FoodItem, assumptions: list[str]) -> float:
+    from_units = _unit_band_grams(raw, assumptions)
+    if from_units is not None:
+        return from_units
     grams = _clamp(raw.estimated_grams, GRAMS_MIN, GRAMS_MAX)
     if grams != raw.estimated_grams:
         assumptions.append(

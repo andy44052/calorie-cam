@@ -66,6 +66,22 @@ which reference you used in "scale_reference".
 - Consider plate coverage AND pile height/density. Rice and pasta are denser \
 than they look; leafy salad is lighter.
 
+Countable foods:
+- When a food comes in discrete units (grapes, sushi pieces, tacos, eggs, \
+cookies, slices, wings), COUNT the units and set "unit_count", then set \
+"per_unit_grams" to the edible weight of ONE unit. Make \
+unit_count x per_unit_grams equal your "estimated_grams" - a count that \
+contradicts the weight is worse than no count at all.
+- Counting is far more repeatable than eyeballing a pile, so prefer it \
+whenever units are distinguishable. If units are partly hidden (the back of a \
+bunch, a stacked tray), count what you see and say in the assumptions how you \
+extrapolated to the hidden ones.
+- Typical single-unit edible weights to anchor against: grape 3-5 g, olive \
+4-5 g, strawberry 12 g, large egg 50 g, sushi nigiri 30-40 g, maki piece \
+20-25 g, taco 80 g, chicken wing 30 g (edible), cookie 30 g, brownie/traybake \
+square 50-60 g, donut 50-60 g, muffin 100 g, pizza slice 100-130 g, medium \
+banana 118 g, medium apple 180 g.
+
 Portion reference points:
 - 85 g of cooked meat looks like a deck of cards or a palm (no fingers).
 - 1 cup (~160 g) of cooked rice or pasta is about a baseball / a closed fist.

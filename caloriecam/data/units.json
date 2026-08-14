@@ -1,0 +1,1121 @@
+{
+ "provenance": "Per-unit EDIBLE weight bands for countable foods. Curated from USDA FoodData Central / FNDDS standard portion weights by a multi-agent sweep (2026-08-13), then audited: entries whose band exceeded 3.2x (too wide to catch an error) or that were really multi-modal product families were dropped rather than shipped, and aliases that hijack another food were removed. low_g/high_g are roughly the 10th/90th percentile of a real served unit; the sanity layer clamps into the band rather than overriding with typical_g.",
+ "units": [
+  {
+   "name": "Apple",
+   "aliases": [
+    "an apple",
+    "apple",
+    "gala apple",
+    "granny smith apple",
+    "green apple",
+    "honeycrisp apple",
+    "red apple",
+    "whole apple"
+   ],
+   "low_g": 130.0,
+   "typical_g": 180.0,
+   "high_g": 245.0,
+   "confidence": "high",
+   "source": "USDA FDC 09003 (Apples, raw, with skin) standard portions: small 149 g, medium (3\" dia) 182 g, large 223 g; high end extended for large Honeycrisp/Fuji retail sizes."
+  },
+  {
+   "name": "Avocado (half)",
+   "aliases": [
+    "avocado (half)",
+    "avocado half",
+    "half an avocado",
+    "half avocado",
+    "halved avocado",
+    "sliced avocado half"
+   ],
+   "low_g": 50.0,
+   "typical_g": 70.0,
+   "high_g": 100.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09038 (Avocados, raw, California): 1 fruit without skin and seed 136 g, so half ~68 g; all-commercial-varieties fruit 201 g gives a larger half."
+  },
+  {
+   "name": "Avocado (whole, flesh only)",
+   "aliases": [
+    "avocado",
+    "avocado (whole, flesh only)",
+    "whole avocado"
+   ],
+   "low_g": 100.0,
+   "typical_g": 140.0,
+   "high_g": 200.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09038; Hass flesh 136 g, all-varieties 201 g."
+  },
+  {
+   "name": "Baby carrot",
+   "aliases": [
+    "baby carrot",
+    "baby carrots",
+    "baby-cut carrot",
+    "carrot stick",
+    "mini carrot"
+   ],
+   "low_g": 8.0,
+   "typical_g": 11.0,
+   "high_g": 16.0,
+   "confidence": "high",
+   "source": "USDA FDC 11124 portion data: 1 medium baby carrot 10 g, 1 large baby carrot 15 g."
+  },
+  {
+   "name": "Bacon strip",
+   "aliases": [
+    "bacon",
+    "bacon strip",
+    "piece of bacon",
+    "rasher",
+    "slice of bacon",
+    "streaky bacon"
+   ],
+   "low_g": 6.0,
+   "typical_g": 9.0,
+   "high_g": 14.0,
+   "confidence": "high",
+   "source": "USDA: bacon, pork, cooked (pan-fried), 1 medium slice = 8 g; thick-cut cooked ~12-13 g"
+  },
+  {
+   "name": "Bagel",
+   "aliases": [
+    "bagel",
+    "everything bagel",
+    "plain bagel",
+    "sesame bagel",
+    "toasted bagel"
+   ],
+   "low_g": 70.0,
+   "typical_g": 100.0,
+   "high_g": 140.0,
+   "confidence": "high",
+   "source": "USDA FDC 'Bagels, plain, enriched' 1 medium (3-1/2 to 4 in dia) = 98 g; 1 large (4-1/2 in) = 131 g; 1 mini = 26 g."
+  },
+  {
+   "name": "Banana",
+   "aliases": [
+    "a banana",
+    "banana",
+    "banana (no peel)",
+    "medium banana",
+    "peeled banana",
+    "whole banana"
+   ],
+   "low_g": 90.0,
+   "typical_g": 118.0,
+   "high_g": 150.0,
+   "confidence": "high",
+   "source": "USDA FDC 09040 (Bananas, raw) standard portions, peel removed: small 101 g, medium (7\"-7 7/8\") 118 g, large 136 g, extra large 152 g."
+  },
+  {
+   "name": "Bread slice",
+   "aliases": [
+    "bread slice",
+    "piece of bread",
+    "sandwich bread slice",
+    "slice of bread",
+    "slice of toast",
+    "sourdough slice",
+    "toast"
+   ],
+   "low_g": 22.0,
+   "typical_g": 30.0,
+   "high_g": 45.0,
+   "confidence": "high",
+   "source": "USDA FDC 'Bread, white, commercially prepared' 1 slice = 25 g, 1 large slice = 32-38 g, 1 thin slice = 20 g; 'Bread, whole-wheat' 1 slice = 28-32 g."
+  },
+  {
+   "name": "Breakfast sausage link",
+   "aliases": [
+    "breakfast link",
+    "breakfast sausage",
+    "breakfast sausage link",
+    "little sausage",
+    "pork sausage link",
+    "sausage link"
+   ],
+   "low_g": 18.0,
+   "typical_g": 26.0,
+   "high_g": 38.0,
+   "confidence": "medium",
+   "source": "USDA SR: pork sausage, cooked link (4 in x 7/8 in) ~ 26-27 g; retail cooked breakfast links label at 24-27 g"
+  },
+  {
+   "name": "Brownie",
+   "aliases": [
+    "brownie",
+    "brownie square",
+    "chocolate brownie",
+    "fudge brownie",
+    "piece of brownie",
+    "walnut brownie"
+   ],
+   "low_g": 35.0,
+   "typical_g": 60.0,
+   "high_g": 110.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Brownies, commercially prepared' standard portion 1 square (2-3/4 x 7/8 in) = 56 g; bakery/cafe brownies commonly 80-110 g."
+  },
+  {
+   "name": "Burger patty, quarter-pound",
+   "aliases": [
+    "beef patty",
+    "burger patty",
+    "burger patty, quarter-pound",
+    "cheeseburger patty",
+    "hamburger patty",
+    "meat patty",
+    "quarter pounder patty"
+   ],
+   "low_g": 70.0,
+   "typical_g": 85.0,
+   "high_g": 105.0,
+   "confidence": "medium",
+   "source": "4 oz (113 g) raw is the standard quarter-pound spec; ~25% cook loss -> ~85 g cooked"
+  },
+  {
+   "name": "Buttermilk biscuit",
+   "aliases": [
+    "breakfast biscuit",
+    "buttermilk biscuit",
+    "dinner biscuit",
+    "drop biscuit",
+    "southern biscuit"
+   ],
+   "low_g": 45.0,
+   "typical_g": 62.0,
+   "high_g": 100.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Biscuits, plain or buttermilk, commercially baked' 1 biscuit (2-1/2 in dia) = 51 g; 1 large (3 in dia) = 82-101 g."
+  },
+  {
+   "name": "Carrot (whole)",
+   "aliases": [
+    "a carrot",
+    "carrot",
+    "carrot (whole)",
+    "medium carrot",
+    "peeled carrot",
+    "raw carrot",
+    "whole carrot"
+   ],
+   "low_g": 45.0,
+   "typical_g": 60.0,
+   "high_g": 90.0,
+   "confidence": "medium",
+   "source": "USDA FDC 11124 (Carrots, raw): small 50 g, medium (7 1/2\" long) 61 g, large 72 g."
+  },
+  {
+   "name": "Cheese cube (1 inch)",
+   "aliases": [
+    "cheddar cube",
+    "cheese chunk",
+    "cheese cube",
+    "cheese cube (1 inch)",
+    "cube of cheese",
+    "cubed cheese",
+    "party cheese cube"
+   ],
+   "low_g": 10.0,
+   "typical_g": 17.0,
+   "high_g": 24.0,
+   "confidence": "high",
+   "source": "USDA SR: cheddar cheese, 1 cubic inch = 17.3 g; other firm cheeses 16-18 g per cubic inch"
+  },
+  {
+   "name": "Cherry tomato",
+   "aliases": [
+    "cherry tomato",
+    "cherry tomatoes",
+    "cocktail tomato",
+    "grape tomato"
+   ],
+   "low_g": 8.0,
+   "typical_g": 15.0,
+   "high_g": 24.0,
+   "confidence": "medium",
+   "source": "USDA FDC 11529 (Tomatoes, red, ripe, raw): 1 cherry tomato 17 g; grape tomatoes commonly 8-10 g."
+  },
+  {
+   "name": "Chicken drumstick",
+   "aliases": [
+    "chicken drumstick",
+    "drumstick",
+    "fried chicken drumstick"
+   ],
+   "low_g": 40.0,
+   "typical_g": 55.0,
+   "high_g": 78.0,
+   "confidence": "medium",
+   "source": "USDA SR: drumstick, meat and skin, roasted, bone removed = 52 g. Breaded/fried and larger modern birds push higher."
+  },
+  {
+   "name": "Chicken nugget",
+   "aliases": [
+    "breaded chicken nugget",
+    "chicken nugget",
+    "dino nugget",
+    "mcnugget",
+    "nugget"
+   ],
+   "low_g": 13.0,
+   "typical_g": 17.0,
+   "high_g": 22.0,
+   "confidence": "high",
+   "source": "McDonald's 20-piece McNuggets = 323 g -> ~16 g/piece; retail frozen nuggets label out at 15-20 g each"
+  },
+  {
+   "name": "Chicken satay skewer",
+   "aliases": [
+    "chicken satay",
+    "chicken satay skewer",
+    "chicken skewer",
+    "grilled chicken skewer",
+    "satay",
+    "satay skewer",
+    "yakitori skewer"
+   ],
+   "low_g": 25.0,
+   "typical_g": 40.0,
+   "high_g": 65.0,
+   "confidence": "low",
+   "source": "Thai/Indonesian restaurant appetizer portions (4-6 skewers from 180-250 g of meat) and yakitori standard skewer weights"
+  },
+  {
+   "name": "Chicken tender / strip",
+   "aliases": [
+    "breaded chicken strip",
+    "chicken finger",
+    "chicken goujon",
+    "chicken strip",
+    "chicken tender",
+    "chicken tender / strip",
+    "tender"
+   ],
+   "low_g": 30.0,
+   "typical_g": 45.0,
+   "high_g": 65.0,
+   "confidence": "medium",
+   "source": "FNDDS 'chicken tenders or strips, breaded, from restaurant'; foodservice specs commonly 1.5-2.2 oz per cooked piece. Frozen retail tenders run smaller (~30 g)."
+  },
+  {
+   "name": "Chicken thigh",
+   "aliases": [
+    "boneless skinless thigh",
+    "boneless thigh",
+    "chicken thigh",
+    "fried chicken thigh",
+    "thigh"
+   ],
+   "low_g": 55.0,
+   "typical_g": 80.0,
+   "high_g": 115.0,
+   "confidence": "medium",
+   "source": "USDA SR: thigh, meat and skin, roasted, bone removed = 62 g. Retail boneless thighs run 4-6 oz raw (113-170 g) -> ~85-130 g cooked."
+  },
+  {
+   "name": "Chicken wing (one piece: drumette or flat)",
+   "aliases": [
+    "buffalo wing",
+    "chicken wing",
+    "chicken wing (one piece: drumette or flat)",
+    "drumette",
+    "hot wing",
+    "party wing",
+    "wing",
+    "wingette"
+   ],
+   "low_g": 14.0,
+   "typical_g": 22.0,
+   "high_g": 34.0,
+   "confidence": "medium",
+   "source": "USDA SR: whole roasted wing, meat + skin, bone removed = 34 g. Restaurant 'party wings' are one of the two meaty segments, so roughly half to two-thirds of a whole wing; breading a"
+  },
+  {
+   "name": "Chocolate truffle",
+   "aliases": [
+    "bonbon",
+    "chocolate ball",
+    "chocolate truffle",
+    "cocoa truffle",
+    "ganache truffle"
+   ],
+   "low_g": 8.0,
+   "typical_g": 12.0,
+   "high_g": 18.0,
+   "confidence": "medium",
+   "source": "No USDA standard portion; established confectionery references and major boxed-chocolate producers -- individual truffles 10-15 g, Lindt Lindor ball 12.5 g, large hand-rolled truff"
+  },
+  {
+   "name": "Cinnamon roll",
+   "aliases": [
+    "cinnamon bun",
+    "cinnamon roll",
+    "cinnamon swirl",
+    "iced cinnamon roll",
+    "sticky bun",
+    "sweet roll"
+   ],
+   "low_g": 60.0,
+   "typical_g": 100.0,
+   "high_g": 170.0,
+   "confidence": "low",
+   "source": "USDA FDC 'Sweet rolls, cinnamon, commercially prepared with raisins' 1 roll = 60 g; bakery cinnamon rolls with icing 110-150 g. Mall-style oversize rolls (e.g. Cinnabon Classic ~22"
+  },
+  {
+   "name": "Corn on the cob",
+   "aliases": [
+    "cob of corn",
+    "corn cob",
+    "corn on cob",
+    "corn on the cob",
+    "ear of corn",
+    "grilled corn on the cob"
+   ],
+   "low_g": 70.0,
+   "typical_g": 100.0,
+   "high_g": 135.0,
+   "confidence": "medium",
+   "source": "USDA FDC 168537/169998 (Corn, sweet, yellow, raw/cooked): kernels from 1 small ear 73 g, medium ear (6 3/4\"-7 1/2\") 90 g, large ear 118 g."
+  },
+  {
+   "name": "Croissant",
+   "aliases": [
+    "butter croissant",
+    "croissant",
+    "pastry croissant",
+    "plain croissant"
+   ],
+   "low_g": 45.0,
+   "typical_g": 60.0,
+   "high_g": 90.0,
+   "confidence": "high",
+   "source": "USDA FDC 'Croissants, butter' (FDC 174987) 1 medium = 57 g, 1 large = 67 g, 1 mini = 28 g; artisan bakery croissants 70-90 g."
+  },
+  {
+   "name": "Cupcake",
+   "aliases": [
+    "buttercream cupcake",
+    "cupcake",
+    "cupcake with frosting",
+    "fairy cake",
+    "frosted cupcake",
+    "iced cupcake"
+   ],
+   "low_g": 40.0,
+   "typical_g": 65.0,
+   "high_g": 110.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Cake, snack cakes, not chocolate, with icing' and FNDDS cupcake with frosting entries: ~50-73 g for a standard 2-1/2 in cupcake; bakery cupcakes with piped buttercream 90"
+  },
+  {
+   "name": "Danish pastry",
+   "aliases": [
+    "breakfast pastry",
+    "cheese danish",
+    "danish",
+    "danish pastry",
+    "fruit danish",
+    "pastry with fruit filling"
+   ],
+   "low_g": 55.0,
+   "typical_g": 78.0,
+   "high_g": 115.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Danish pastry, cheese' 1 pastry (4-1/4 in dia) = 71 g; 'Danish pastry, fruit' 1 pastry = 71-94 g; bakery danishes 90-115 g."
+  },
+  {
+   "name": "Dinner sausage link (Italian / bratwurst / kielbasa)",
+   "aliases": [
+    "andouille link",
+    "banger",
+    "brat",
+    "bratwurst",
+    "dinner sausage",
+    "dinner sausage link (italian / bratwurst / kielbasa)",
+    "grilled sausage",
+    "italian sausage",
+    "kielbasa link"
+   ],
+   "low_g": 60.0,
+   "typical_g": 85.0,
+   "high_g": 110.0,
+   "confidence": "medium",
+   "source": "Retail links pack 5 per 19-20 oz (~108 g raw each) or 4 oz raw (113 g); ~20% cook loss -> ~85-90 g cooked"
+  },
+  {
+   "name": "Donut",
+   "aliases": [
+    "donut",
+    "doughnut",
+    "filled doughnut",
+    "frosted donut",
+    "glazed donut",
+    "jelly donut",
+    "ring donut"
+   ],
+   "low_g": 45.0,
+   "typical_g": 62.0,
+   "high_g": 95.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Doughnuts, yeast-leavened, glazed' 1 medium (3-3/4 in dia) = 60 g; 'Doughnuts, cake-type, plain' 1 medium (3-1/4 in) = 47 g. Krispy Kreme original glazed 49 g, Dunkin gla"
+  },
+  {
+   "name": "Dumpling / gyoza",
+   "aliases": [
+    "dumpling",
+    "dumpling / gyoza",
+    "fried dumpling",
+    "gyoza",
+    "pot sticker",
+    "potsticker",
+    "shumai",
+    "siu mai",
+    "soup dumpling",
+    "steamed dumpling",
+    "wonton",
+    "xiao long bao"
+   ],
+   "low_g": 14.0,
+   "typical_g": 22.0,
+   "high_g": 35.0,
+   "confidence": "medium",
+   "source": "FNDDS dumpling/potsticker entries (~20-25 g each cooked) and frozen-brand per-piece weights (Ling Ling, Bibigo, Trader Joe's: 19-26 g)"
+  },
+  {
+   "name": "Egg roll",
+   "aliases": [
+    "chinese egg roll",
+    "egg roll",
+    "pork egg roll",
+    "shrimp egg roll"
+   ],
+   "low_g": 60.0,
+   "typical_g": 90.0,
+   "high_g": 130.0,
+   "confidence": "medium",
+   "source": "USDA FNDDS egg roll standard portion (~89 g per roll) and Chinese-American takeout per-piece weights"
+  },
+  {
+   "name": "English muffin",
+   "aliases": [
+    "english muffin"
+   ],
+   "low_g": 52.0,
+   "typical_g": 57.0,
+   "high_g": 64.0,
+   "confidence": "high",
+   "source": "USDA FDC 18314 English muffin, plain, 57 g."
+  },
+  {
+   "name": "Falafel ball",
+   "aliases": [
+    "chickpea fritter",
+    "falafel",
+    "falafel ball",
+    "falafel fritter",
+    "falafel patty"
+   ],
+   "low_g": 15.0,
+   "typical_g": 25.0,
+   "high_g": 35.0,
+   "confidence": "medium",
+   "source": "USDA SR falafel patty, approx 2-1/4 inch diameter = 17 g; Mediterranean restaurant and frozen-brand balls run 22-32 g"
+  },
+  {
+   "name": "Fish finger / fish stick",
+   "aliases": [
+    "battered fish stick",
+    "breaded fish stick",
+    "fish finger",
+    "fish finger / fish stick",
+    "fish fingers",
+    "fish stick"
+   ],
+   "low_g": 22.0,
+   "typical_g": 28.0,
+   "high_g": 34.0,
+   "confidence": "high",
+   "source": "US retail labels (Gorton's, Van de Kamp's): 6 sticks = 170 g -> 28 g each; UK fish fingers 25-28 g each"
+  },
+  {
+   "name": "Grape (single)",
+   "aliases": [
+    "a grape",
+    "grape",
+    "grape (single)",
+    "green grape",
+    "one grape",
+    "red grape",
+    "seedless grape",
+    "single grape"
+   ],
+   "low_g": 3.0,
+   "typical_g": 5.0,
+   "high_g": 8.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09132 (Grapes, red or green, European type, raw): 10 grapes 49 g, i.e. ~4.9 g each."
+  },
+  {
+   "name": "Hot dog (frankfurter, no bun)",
+   "aliases": [
+    "frank",
+    "frankfurter",
+    "hot dog",
+    "hot dog (frankfurter, no bun)",
+    "hotdog sausage",
+    "weiner",
+    "wiener"
+   ],
+   "low_g": 42.0,
+   "typical_g": 50.0,
+   "high_g": 75.0,
+   "confidence": "medium",
+   "source": "Standard US retail 8-per-pound frank = 57 g raw -> ~50 g cooked; USDA frankfurter, beef, 1 frank = 45 g; bun-length/jumbo 6-per-pound = 76 g raw"
+  },
+  {
+   "name": "Kiwi",
+   "aliases": [
+    "a kiwi",
+    "gold kiwi",
+    "green kiwi",
+    "kiwi",
+    "kiwi fruit",
+    "kiwifruit",
+    "peeled kiwi"
+   ],
+   "low_g": 50.0,
+   "typical_g": 70.0,
+   "high_g": 90.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09148 (Kiwifruit, green, raw): 1 fruit (2\" dia) 69 g, edible flesh without skin."
+  },
+  {
+   "name": "Large egg",
+   "aliases": [
+    "boiled egg",
+    "egg",
+    "fried egg",
+    "hard boiled egg",
+    "large egg",
+    "one egg",
+    "poached egg",
+    "sunny side up egg"
+   ],
+   "low_g": 44.0,
+   "typical_g": 50.0,
+   "high_g": 58.0,
+   "confidence": "high",
+   "source": "USDA FDC / SR Legacy standard portion: large egg, whole, raw, without shell = 50 g (medium 44 g, extra-large 56 g, jumbo 63 g)"
+  },
+  {
+   "name": "Lemon bar (traybake square)",
+   "aliases": [
+    "blondie bar",
+    "dessert bar",
+    "lemon bar",
+    "lemon bar (traybake square)",
+    "lemon square",
+    "shortbread bar",
+    "tray bake slice",
+    "traybake square"
+   ],
+   "low_g": 40.0,
+   "typical_g": 65.0,
+   "high_g": 100.0,
+   "confidence": "low",
+   "source": "No dedicated USDA standard portion; anchored to USDA FNDDS 'Lemon bar' ~2 in square (~55-65 g) and cafe traybake squares commonly cut 2.5-3 in (80-100 g)."
+  },
+  {
+   "name": "Lemon or lime wedge",
+   "aliases": [
+    "lemon or lime wedge",
+    "lemon wedge",
+    "lime slice",
+    "lime wedge",
+    "slice of lemon",
+    "wedge of lemon",
+    "wedge of lime"
+   ],
+   "low_g": 5.0,
+   "typical_g": 8.0,
+   "high_g": 14.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09150/09159 (Lemons/limes, raw): 1 wedge or slice (1/8 of a 2 1/8\" dia lemon) 7 g; lime wedge ~8 g."
+  },
+  {
+   "name": "Macaron",
+   "aliases": [
+    "colorful macaron",
+    "french macaron",
+    "macaron",
+    "one macaron",
+    "pistachio macaron"
+   ],
+   "low_g": 10.0,
+   "typical_g": 14.0,
+   "high_g": 20.0,
+   "confidence": "medium",
+   "source": "No USDA standard portion; established patisserie references -- standard Parisian macaron shell pair with ganache 12-15 g, Laduree/Pierre Herme size ~17-20 g, petit format ~8-10 g."
+  },
+  {
+   "name": "Mandarin",
+   "aliases": [
+    "clementine",
+    "cutie",
+    "halo orange",
+    "mandarin",
+    "mandarin orange",
+    "satsuma",
+    "small orange",
+    "tangerine"
+   ],
+   "low_g": 60.0,
+   "typical_g": 80.0,
+   "high_g": 110.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09218 (Tangerines/mandarins, raw): small 76 g, medium (2 1/2\" dia) 88 g, large 120 g; clementine 74 g."
+  },
+  {
+   "name": "Muffin",
+   "aliases": [
+    "bakery muffin",
+    "blueberry muffin",
+    "bran muffin",
+    "chocolate chip muffin",
+    "corn muffin"
+   ],
+   "low_g": 60.0,
+   "typical_g": 105.0,
+   "high_g": 150.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Muffins, blueberry, commercially prepared' 1 small (2-1/2 in dia) = 57-66 g, 1 large = 139 g; coffee-chain muffins typically 110-140 g."
+  },
+  {
+   "name": "Olive",
+   "aliases": [
+    "an olive",
+    "black olive",
+    "green olive",
+    "kalamata olive",
+    "olive",
+    "pitted olive",
+    "single olive"
+   ],
+   "low_g": 3.0,
+   "typical_g": 4.5,
+   "high_g": 9.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09193/09195 (Olives, ripe canned; green pickled): small 3.2 g, large 4.4 g, jumbo 8.3 g, super colossal ~12 g."
+  },
+  {
+   "name": "Orange",
+   "aliases": [
+    "an orange",
+    "navel orange",
+    "orange",
+    "orange (peeled)",
+    "peeled orange",
+    "whole orange"
+   ],
+   "low_g": 100.0,
+   "typical_g": 140.0,
+   "high_g": 190.0,
+   "confidence": "high",
+   "source": "USDA FDC 09200 (Oranges, raw, navels) 1 orange 140 g; 09200/09201 all commercial varieties small 96 g, medium 131 g, large 184 g."
+  },
+  {
+   "name": "Pancake",
+   "aliases": [
+    "buttermilk pancake",
+    "flapjack",
+    "griddle cake",
+    "hotcake",
+    "one pancake",
+    "pancake"
+   ],
+   "low_g": 40.0,
+   "typical_g": 70.0,
+   "high_g": 110.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Pancakes, plain, prepared from recipe' 1 pancake (4 in dia) = 38 g; (6 in dia) = 77 g; diner pancakes 90-110 g."
+  },
+  {
+   "name": "Peach",
+   "aliases": [
+    "a peach",
+    "fresh peach",
+    "nectarine",
+    "peach",
+    "whole peach",
+    "yellow peach"
+   ],
+   "low_g": 115.0,
+   "typical_g": 150.0,
+   "high_g": 195.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09236 (Peaches, raw): small 130 g, medium (2 2/3\" dia) 150 g, large 175 g; nectarine (09266) medium 142 g."
+  },
+  {
+   "name": "Pear",
+   "aliases": [
+    "a pear",
+    "anjou pear",
+    "bartlett pear",
+    "bosc pear",
+    "green pear",
+    "pear",
+    "whole pear"
+   ],
+   "low_g": 140.0,
+   "typical_g": 180.0,
+   "high_g": 240.0,
+   "confidence": "high",
+   "source": "USDA FDC 09252 (Pears, raw): small 148 g, medium 178 g, large 230 g."
+  },
+  {
+   "name": "Pizza slice, deep dish",
+   "aliases": [
+    "chicago deep dish slice",
+    "deep dish pizza slice",
+    "detroit style pizza slice",
+    "pan pizza slice",
+    "pizza slice, deep dish",
+    "slice of deep dish",
+    "stuffed crust deep dish slice"
+   ],
+   "low_g": 130.0,
+   "typical_g": 210.0,
+   "high_g": 320.0,
+   "confidence": "low",
+   "source": "Chicago deep-dish restaurant menu weights (1/8 of a large pie, 220-290 g), Detroit-style square weights (130-160 g), and Pizza Hut pan slice data (~115-135 g)"
+  },
+  {
+   "name": "Pizza slice, hand-tossed",
+   "aliases": [
+    "cheese pizza slice",
+    "hand tossed pizza slice",
+    "new york slice",
+    "ny slice",
+    "pepperoni pizza slice",
+    "pizza slice",
+    "pizza slice, hand-tossed",
+    "regular crust pizza slice",
+    "slice of pizza"
+   ],
+   "low_g": 95.0,
+   "typical_g": 130.0,
+   "high_g": 185.0,
+   "confidence": "medium",
+   "source": "USDA FNDDS regular-crust pizza slice (~107 g) and chain data (Domino's large hand-tossed cheese slice ~112 g; NY counter slice, 1/8 of an 18-inch pie, 140-165 g)"
+  },
+  {
+   "name": "Pizza slice, thin crust",
+   "aliases": [
+    "pizza slice, thin crust",
+    "slice of thin crust pizza",
+    "tavern cut pizza slice",
+    "thin crust pizza slice",
+    "thin crust slice",
+    "thin pizza slice"
+   ],
+   "low_g": 60.0,
+   "typical_g": 85.0,
+   "high_g": 120.0,
+   "confidence": "medium",
+   "source": "USDA FoodData Central thin-crust pizza portions (1 piece NFS = 97 g for frozen thin crust) and 1/8-of-14-inch restaurant slice weights"
+  },
+  {
+   "name": "Plum",
+   "aliases": [
+    "a plum",
+    "black plum",
+    "fresh plum",
+    "plum",
+    "red plum",
+    "whole plum"
+   ],
+   "low_g": 45.0,
+   "typical_g": 65.0,
+   "high_g": 95.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09279 (Plums, raw): 1 fruit (2 1/8\" dia) 66 g; 1 cup sliced 165 g."
+  },
+  {
+   "name": "Potato",
+   "aliases": [
+    "a potato",
+    "baked potato",
+    "jacket potato",
+    "medium potato",
+    "potato",
+    "russet potato",
+    "whole potato"
+   ],
+   "low_g": 130.0,
+   "typical_g": 180.0,
+   "high_g": 300.0,
+   "confidence": "medium",
+   "source": "USDA FDC 170026 (Potatoes, russet, flesh and skin, raw): small 138 g, medium (2 1/4\"-3 1/4\" dia) 173 g, large 369 g."
+  },
+  {
+   "name": "Roma tomato",
+   "aliases": [
+    "plum tomato",
+    "roma tomato"
+   ],
+   "low_g": 50.0,
+   "typical_g": 62.0,
+   "high_g": 80.0,
+   "confidence": "high",
+   "source": "USDA FDC 11529 plum/roma tomato 62 g."
+  },
+  {
+   "name": "Scone",
+   "aliases": [
+    "bakery scone",
+    "blueberry scone",
+    "cream scone",
+    "fruit scone",
+    "scone",
+    "triangular scone"
+   ],
+   "low_g": 55.0,
+   "typical_g": 85.0,
+   "high_g": 125.0,
+   "confidence": "low",
+   "source": "No single USDA standard portion; FNDDS scone entries ~60 g, British plain scone 55-70 g, US coffee-chain scones (e.g. Starbucks) 100-120 g."
+  },
+  {
+   "name": "Sea scallop",
+   "aliases": [
+    "pan seared scallop",
+    "scallop",
+    "sea scallop",
+    "seared scallop"
+   ],
+   "low_g": 12.0,
+   "typical_g": 20.0,
+   "high_g": 33.0,
+   "confidence": "medium",
+   "source": "Count sizing: 20/30 per lb = 15-23 g raw each; restaurant 10/20 count = 23-45 g raw; ~15-20% cook loss"
+  },
+  {
+   "name": "Shrimp, large / jumbo",
+   "aliases": [
+    "big shrimp",
+    "grilled shrimp",
+    "jumbo shrimp",
+    "king prawn",
+    "large shrimp",
+    "shrimp skewer piece",
+    "shrimp, large / jumbo",
+    "tiger prawn"
+   ],
+   "low_g": 8.0,
+   "typical_g": 12.0,
+   "high_g": 18.0,
+   "confidence": "medium",
+   "source": "Industry count sizing: 31/35 to 21/25 per lb headless shell-on = 13-21 g raw each; ~70-75% edible yield after peel and cook"
+  },
+  {
+   "name": "Shrimp, medium",
+   "aliases": [
+    "cooked shrimp",
+    "medium shrimp",
+    "one shrimp",
+    "prawn",
+    "shrimp",
+    "shrimp piece",
+    "shrimp, medium"
+   ],
+   "low_g": 5.0,
+   "typical_g": 7.0,
+   "high_g": 9.0,
+   "confidence": "medium",
+   "source": "Industry count sizing: 41/50 per lb headless shell-on = 9-11 g raw each; peeling + cooking yields ~70% edible"
+  },
+  {
+   "name": "Slice of cake",
+   "aliases": [
+    "birthday cake slice",
+    "cake slice",
+    "carrot cake slice",
+    "chocolate cake slice",
+    "layer cake slice",
+    "piece of cake",
+    "slice of cake"
+   ],
+   "low_g": 70.0,
+   "typical_g": 110.0,
+   "high_g": 185.0,
+   "confidence": "low",
+   "source": "USDA FDC 'Cake, chocolate, commercially prepared with chocolate frosting' 1 piece (1/8 of an 18 oz cake) = 64 g; restaurant layer-cake slices commonly 150-200 g."
+  },
+  {
+   "name": "Slice of cheese",
+   "aliases": [
+    "american cheese",
+    "burger cheese",
+    "cheese single",
+    "cheese slice",
+    "slice of cheddar",
+    "slice of cheese",
+    "swiss slice"
+   ],
+   "low_g": 17.0,
+   "typical_g": 22.0,
+   "high_g": 30.0,
+   "confidence": "medium",
+   "source": "Kraft-style processed single = 19-21 g; USDA cheddar, 1 slice (1 oz) = 28 g; deli-cut slices 25-34 g"
+  },
+  {
+   "name": "Slice of cheesecake",
+   "aliases": [
+    "cheesecake slice",
+    "cheesecake wedge",
+    "new york cheesecake slice",
+    "piece of cheesecake",
+    "slice of cheesecake"
+   ],
+   "low_g": 80.0,
+   "typical_g": 125.0,
+   "high_g": 190.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Cheesecake, commercially prepared' 1 piece (1/6 of a 17 oz cake) = 80 g; restaurant slices 150-200 g (Cheesecake Factory slices exceed 200 g)."
+  },
+  {
+   "name": "Slice of pie",
+   "aliases": [
+    "apple pie slice",
+    "pie slice",
+    "piece of pie",
+    "pumpkin pie slice",
+    "slice of pie",
+    "slice of tart",
+    "wedge of pie"
+   ],
+   "low_g": 105.0,
+   "typical_g": 145.0,
+   "high_g": 200.0,
+   "confidence": "medium",
+   "source": "USDA FDC 'Pie, apple, commercially prepared' 1 piece (1/8 of 9 in pie) = 117-125 g; 1 piece (1/6 of 8 in pie) = ~155 g; diner slices 170-200 g."
+  },
+  {
+   "name": "Smash / thin fast-food patty",
+   "aliases": [
+    "fast food burger patty",
+    "slider patty",
+    "smash / thin fast-food patty",
+    "smash burger patty",
+    "smashed patty",
+    "thin burger patty"
+   ],
+   "low_g": 28.0,
+   "typical_g": 45.0,
+   "high_g": 60.0,
+   "confidence": "medium",
+   "source": "Smash patties are typically 2 oz (57 g) raw -> ~45 g cooked; classic fast-food regular hamburger patty 1.6 oz raw -> ~30 g cooked; sliders 1-1.5 oz raw"
+  },
+  {
+   "name": "Strawberry",
+   "aliases": [
+    "a strawberry",
+    "fresh strawberry",
+    "strawberries (each)",
+    "strawberry",
+    "whole strawberry"
+   ],
+   "low_g": 8.0,
+   "typical_g": 14.0,
+   "high_g": 25.0,
+   "confidence": "medium",
+   "source": "USDA FDC 09316 (Strawberries, raw): small 7 g, medium (1 1/4\" dia) 12 g, large 18 g, extra large 27 g."
+  },
+  {
+   "name": "Sushi nigiri piece",
+   "aliases": [
+    "nigiri",
+    "nigiri sushi",
+    "piece of nigiri",
+    "piece of sushi",
+    "salmon nigiri",
+    "sushi nigiri piece",
+    "sushi piece",
+    "tuna nigiri"
+   ],
+   "low_g": 22.0,
+   "typical_g": 32.0,
+   "high_g": 45.0,
+   "confidence": "medium",
+   "source": "USDA FNDDS sushi entries (~30-35 g per nigiri piece) cross-checked against sushi-bar build standards: 18-20 g shari (rice) + 10-15 g neta (topping)"
+  },
+  {
+   "name": "Sweet potato",
+   "aliases": [
+    "a sweet potato",
+    "baked sweet potato",
+    "sweet potato",
+    "sweetpotato",
+    "whole sweet potato"
+   ],
+   "low_g": 100.0,
+   "typical_g": 140.0,
+   "high_g": 200.0,
+   "confidence": "medium",
+   "source": "USDA FDC 168482 (Sweet potato, raw, unprepared): medium (5\" long, 2\" dia) 130 g, large 180 g; baked in skin medium 114 g."
+  },
+  {
+   "name": "Taco",
+   "aliases": [
+    "al pastor taco",
+    "beef taco",
+    "carne asada taco",
+    "fish taco",
+    "hard shell taco",
+    "soft taco",
+    "street taco",
+    "taco"
+   ],
+   "low_g": 70.0,
+   "typical_g": 120.0,
+   "high_g": 190.0,
+   "confidence": "low",
+   "source": "Chain nutrition data (Taco Bell crunchy taco 78 g, soft taco 99 g) plus taqueria street-taco and sit-down restaurant taco weights"
+  },
+  {
+   "name": "Tomato (whole)",
+   "aliases": [
+    "beefsteak tomato",
+    "medium tomato",
+    "slicing tomato",
+    "tomato",
+    "tomato (whole)",
+    "whole tomato"
+   ],
+   "low_g": 90.0,
+   "typical_g": 123.0,
+   "high_g": 180.0,
+   "confidence": "high",
+   "source": "USDA FDC 11529 medium whole tomato 123 g."
+  },
+  {
+   "name": "Tortilla chip",
+   "aliases": [
+    "corn chip",
+    "nacho chip",
+    "restaurant tortilla chip",
+    "single tortilla chip",
+    "tortilla chip"
+   ],
+   "low_g": 1.5,
+   "typical_g": 2.5,
+   "high_g": 4.5,
+   "confidence": "medium",
+   "source": "Standard 1 oz (28 g) reference serving = 10-12 chips per Doritos/Tostitos labels, giving 2.3-2.8 g per chip"
+  }
+ ]
+}

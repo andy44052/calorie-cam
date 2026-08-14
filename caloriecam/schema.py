@@ -22,6 +22,10 @@ class FoodItem(BaseModel):
         default=None,
         description="Number of discrete units when the food is countable (grapes, sushi pieces, tacos, eggs, slices); null for bulk foods like rice or sauces",
     )
+    per_unit_grams: Optional[float] = Field(
+        default=None,
+        description="Edible weight of ONE unit in grams; set this whenever unit_count is set, so that unit_count x per_unit_grams equals estimated_grams",
+    )
     confidence: Literal["low", "medium", "high"] = Field(
         description="Confidence in both the identification and the portion estimate"
     )

@@ -14,12 +14,12 @@ entry itself is a combined dish that absorbs ingredient words (loose_match).
 """
 
 import json
-import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
+from . import text as text_mod
 from .sanity import SOURCE_DB_BRANDED, SOURCE_DB_GENERIC
 from .schema import FoodItem
 
@@ -30,7 +30,7 @@ _DATA_DIR = Path(__file__).parent / "data"
 MENU_THRESHOLD = 0.80
 GENERIC_THRESHOLD = 0.78
 
-_STOPWORDS = {"a", "an", "the", "of", "with", "and", "on", "in", "style"}
+_STOPWORDS = text_mod.STOPWORDS
 
 # Words that never change WHAT a food is (only how it looks or how much).
 # Deliberately absent: fried, breaded, crispy, creamy, buttered, loaded,
@@ -71,27 +71,9 @@ class Resolution:
     serving_g: Optional[float] = None
 
 
-def _norm(text: str) -> str:
-    text = text.lower().replace("'", "").replace("’", "")
-    text = re.sub(r"[^a-z0-9%]+", " ", text)
-    return " ".join(text.split())
-
-
-def _stem(token: str) -> str:
-    # Cheap plural folding: "eggs"->"egg", "potatoes"->"potato". Both sides of
-    # every comparison go through this, so consistency matters more than
-    # linguistic correctness.
-    if len(token) > 4 and token.endswith("oes"):
-        return token[:-2]
-    if len(token) > 3 and token.endswith("s") and not token.endswith("ss"):
-        return token[:-1]
-    return token
-
-
-def _tokens(text: str) -> frozenset[str]:
-    return frozenset(
-        _stem(t) for t in _norm(text).split() if t not in _STOPWORDS
-    )
+_norm = text_mod.norm
+_stem = text_mod.stem
+_tokens = text_mod.tokens
 
 
 def _leftover_allowed(leftover: frozenset, extra_ok: frozenset) -> bool:
