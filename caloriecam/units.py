@@ -44,7 +44,9 @@ class UnitBand:
 def _bands() -> tuple[tuple[frozenset, UnitBand], ...]:
     if not _DATA.exists():
         return ()
-    payload = json.loads(_DATA.read_text(encoding="utf-8"))
+    # utf-8-sig: a Windows editor saving these files adds a BOM, and plain
+    # utf-8 chokes on it.
+    payload = json.loads(_DATA.read_text(encoding="utf-8-sig"))
     out = []
     for entry in payload["units"]:
         band = UnitBand(

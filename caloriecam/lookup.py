@@ -119,13 +119,13 @@ def _entry_score(item_name: str, entry: dict, extra_ok: frozenset = frozenset())
 
 @lru_cache(maxsize=1)
 def _menu_items() -> tuple[dict, ...]:
-    payload = json.loads((_DATA_DIR / "fastfood.json").read_text(encoding="utf-8"))
+    payload = json.loads((_DATA_DIR / "fastfood.json").read_text(encoding="utf-8-sig"))
     return tuple(payload["menu_items"])
 
 
 @lru_cache(maxsize=1)
 def _generic_foods() -> tuple[dict, ...]:
-    payload = json.loads((_DATA_DIR / "generic.json").read_text(encoding="utf-8"))
+    payload = json.loads((_DATA_DIR / "generic.json").read_text(encoding="utf-8-sig"))
     return tuple(payload["foods"])
 
 
