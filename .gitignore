@@ -5,3 +5,4 @@ __pycache__/
 .env
 caloriecam/history.db*
 benchmark_results*.jsonl
+misses.csv
