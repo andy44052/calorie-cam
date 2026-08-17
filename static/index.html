@@ -167,6 +167,27 @@
     color: var(--blue-text);
   }
   .pill.db { background: var(--blue); border-color: var(--blue); color: var(--white); }
+  .pill.personal { border-style: dashed; }
+  .today-line {
+    color: var(--blue-text); font-size: 13px; margin-top: 8px;
+    padding-top: 8px; border-top: 1px solid var(--blue-border);
+  }
+  .correct-label { color: var(--blue-text); font-size: 13px; margin-bottom: 8px; }
+  .correct-row { display: flex; gap: 8px; }
+  .correct-input {
+    flex: 1; min-width: 0;
+    background: none; border: 1px solid var(--blue-border); border-radius: 10px;
+    color: var(--white); font-size: 16px; padding: 10px 12px;
+  }
+  .correct-input:focus { outline: none; border-color: var(--blue); }
+  .correct-input::placeholder { color: var(--blue-text); opacity: 0.65; }
+  .correct-btn {
+    background: var(--blue); border: none; border-radius: 10px;
+    color: var(--white); font-size: 15px; font-weight: 600;
+    padding: 10px 18px; cursor: pointer;
+  }
+  .correct-btn:disabled { opacity: 0.6; }
+  .correct-done { color: var(--blue-text); font-size: 13px; }
   .item-kcal { text-align: right; white-space: nowrap; }
   .item-kcal b { font-size: 17px; color: var(--white); }
   .item-kcal span { display: block; color: var(--blue-text); font-size: 12px; }
@@ -321,6 +342,12 @@
     total.appendChild(
       el("div", "total-range", fmt(data.total_kcal.low) + " – " + fmt(data.total_kcal.high) + " kcal likely range")
     );
+    if (data.today && data.today.meals > 0) {
+      total.appendChild(
+        el("div", "today-line", "Today so far: ~" + fmt(data.today.kcal) + " kcal across " +
+          data.today.meals + " meal" + (data.today.meals === 1 ? "" : "s"))
+      );
+    }
     root.appendChild(total);
 
     const list = el("div", "card");
@@ -337,6 +364,12 @@
       meta.appendChild(el("span", "pill " + item.confidence, item.confidence));
       if (item.source && item.source !== "model_estimate") {
         meta.appendChild(el("span", "pill db", "✓ food db"));
+      }
+      const personal = (item.assumptions || []).some(function (a) {
+        return a.indexOf("blended with your meal history") !== -1;
+      });
+      if (personal) {
+        meta.appendChild(el("span", "pill personal", "your usual"));
       }
       left.appendChild(meta);
       const right = el("div", "item-kcal");
@@ -378,9 +411,50 @@
       root.appendChild(foot);
     }
 
+    if (data.meal_id) {
+      root.appendChild(buildCorrectionCard(data.meal_id));
+    }
+
     show("result");
   }
   window.renderResult = renderResult; // exposed for testing
+
+  function buildCorrectionCard(mealId) {
+    const card = el("div", "card correct-card");
+    card.appendChild(el("div", "correct-label", "Know better? Correct this meal:"));
+    const row = el("div", "correct-row");
+    const box = el("input", "correct-input");
+    box.type = "number";
+    box.inputMode = "numeric";
+    box.placeholder = "actual kcal";
+    box.min = "1";
+    const btn = el("button", "correct-btn", "Save");
+    const done = el("div", "correct-done hidden", "Saved - future estimates of this food will use it.");
+    btn.addEventListener("click", async function () {
+      const kcal = parseInt(box.value, 10);
+      if (!kcal || kcal < 1) { box.focus(); return; }
+      btn.disabled = true;
+      const pin = localStorage.getItem(PIN_KEY);
+      const headers = { "Content-Type": "application/json" };
+      if (pin) headers["X-CalorieCam-Pin"] = pin;
+      try {
+        const res = await fetch("/api/meals/" + mealId + "/correct", {
+          method: "POST", headers: headers, body: JSON.stringify({ kcal: kcal }),
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        row.classList.add("hidden");
+        done.classList.remove("hidden");
+      } catch (_) {
+        btn.disabled = false;
+        btn.textContent = "Retry";
+      }
+    });
+    row.appendChild(box);
+    row.appendChild(btn);
+    card.appendChild(row);
+    card.appendChild(done);
+    return card;
+  }
 
   input.addEventListener("change", async () => {
     const file = input.files && input.files[0];

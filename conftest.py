@@ -1,11 +1,32 @@
+import os
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+# Point history at a throwaway location BEFORE any test imports app.py, whose
+# module-level default_store() would otherwise create caloriecam/history.db in
+# the working tree the moment the suite starts.
+_HISTORY_SANDBOX = tempfile.mkdtemp(prefix="caloriecam-test-history-")
+os.environ["CALORIECAM_HISTORY"] = str(Path(_HISTORY_SANDBOX) / "import-time.db")
+
 from caloriecam.schema import FoodAnalysis, FoodItem  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _isolated_history(tmp_path, monkeypatch):
+    """Every test gets its own empty history DB - no bleed between tests."""
+    db = tmp_path / "history.db"
+    monkeypatch.setenv("CALORIECAM_HISTORY", str(db))
+    webapp = sys.modules.get("app")
+    if webapp is not None and getattr(webapp, "_history", None) is not None:
+        from caloriecam.history import HistoryStore
+
+        monkeypatch.setattr(webapp, "_history", HistoryStore(db))
+    yield
 
 
 @pytest.fixture

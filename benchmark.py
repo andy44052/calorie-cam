@@ -120,7 +120,8 @@ def cmd_run(args: argparse.Namespace) -> int:
                 started = time.time()
                 try:
                     meal, analysis = pipeline.run(
-                        photo, model=args.model, client=client, debate=not args.no_debate
+                        photo, model=args.model, client=client, debate=not args.no_debate,
+                        skeptic_model=args.skeptic_model,
                     )
                     rec["ok"] = True
                     rec.update(_capture(meal, analysis))
@@ -129,7 +130,8 @@ def cmd_run(args: argparse.Namespace) -> int:
                     time.sleep(60)
                     try:
                         meal, analysis = pipeline.run(
-                            photo, model=args.model, client=client, debate=not args.no_debate
+                            photo, model=args.model, client=client,
+                            debate=not args.no_debate, skeptic_model=args.skeptic_model,
                         )
                         rec["ok"] = True
                         rec.update(_capture(meal, analysis))
@@ -333,6 +335,10 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--out", default="benchmark_results.jsonl")
     r.add_argument("--model", default=DEFAULT_MODEL)
     r.add_argument("--no-debate", action="store_true")
+    r.add_argument(
+        "--skeptic-model", default=None,
+        help="run critic+reviser on a cheaper model (A/B the Haiku skeptic)",
+    )
     r.add_argument(
         "--max-cost", type=float, default=None,
         help="stop once this much has been spent (resume by re-running)",

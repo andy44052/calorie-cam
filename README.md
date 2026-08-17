@@ -116,9 +116,36 @@ cheaper `--model`.
 | Env var | Effect |
 |---|---|
 | `ANTHROPIC_API_KEY` | Required. |
-| `CALORIECAM_PIN` | If set, `/api/estimate` requires this PIN. Set it on any public deployment. |
+| `CALORIECAM_PIN` | If set, the API requires this PIN. Set it on any public deployment. |
 | `CALORIECAM_DEBATE` | `off` disables adversarial review (cheaper, faster, less accurate). |
+| `CALORIECAM_HISTORY` | `off` disables the meal diary + portion blending; a path uses that DB file. |
+| `CALORIECAM_SKEPTIC_MODEL` | Run the critic/reviser on a cheaper model (e.g. `claude-haiku-4-5`). Benchmark before enabling. |
 | `PORT` | Server port (default 8000). |
+
+## Meal history and personal portions
+
+Every estimate is logged to a local SQLite diary (`caloriecam/history.db`,
+gitignored). That buys three things:
+
+- **"Today so far"** — a running daily total on every result, corrections
+  included.
+- **Personal portion blending** — when the same food shows up again (2+ past
+  sightings), the fresh portion estimate is shrunk toward *your* median
+  portion, which collapses run-to-run noise at zero API cost. Items with
+  counted units or published menu portions are never blended, a density check
+  refuses to blend across name collisions ("grilled cheese" is not "cheese"),
+  and the diary always stores the raw pre-blend estimate so the prior can
+  never feed on its own output.
+- **Corrections** — the "Know better?" box on each result stores what the
+  meal really was; future estimates of that food lean on it.
+
+The adaptive debate gate also decides per photo whether the skeptic pass is
+worth paying for: drafts where every item is database-anchored, few in number,
+and tightly banded skip the second opinion.
+
+Note for the cloud deployment: Render's free tier has an ephemeral disk, so
+the diary resets on every deploy or spin-down. History shines on the local
+server; give the service a persistent disk if you want it in the cloud.
 
 ## Tests
 

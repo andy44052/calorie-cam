@@ -42,3 +42,18 @@ def stem(token: str) -> str:
 
 def tokens(text: str) -> frozenset[str]:
     return frozenset(stem(t) for t in norm(text).split() if t not in STOPWORDS)
+
+
+def name_key(text: str) -> str:
+    """Stable identity key for "the same food across meals".
+
+    Same normalizer the database matcher uses (one normalizer, two consumers -
+    no drift), plus modifier-dropping so "grilled chicken breast" and "chicken
+    breast, sliced" key identically. Sorted so word order can't split a food
+    into two histories.
+    """
+    # Digits are counts, not identity ("2 eggs" is the same food as "eggs";
+    # "2%" survives because isdigit() is False for it) - same rule the
+    # matcher's leftover-token check uses.
+    core = sorted(t for t in tokens(text) if t not in MODIFIERS and not t.isdigit())
+    return " ".join(core) if core else norm(text)

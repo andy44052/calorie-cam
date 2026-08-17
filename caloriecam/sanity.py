@@ -46,6 +46,10 @@ class ItemEstimate:
     assumptions: list[str]
     brand: Optional[str]
     source: str
+    # Pre-blend grams when personal-history blending moved this item; None
+    # otherwise. The history store records THIS value, never the blended one,
+    # so the prior can't feed on its own output.
+    grams_raw: Optional[int] = None
 
 
 @dataclass

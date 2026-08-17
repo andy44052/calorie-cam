@@ -15,6 +15,10 @@ MAX_TOKENS = 16000
 # giant paste can't blow up the prompt.
 HINT_MAX_CHARS = 500
 
-# Photos with at most this many items, all at high confidence, skip the
-# adversarial debate: measured, the critic never found fault with them.
-SKIP_DEBATE_MAX_ITEMS = 3
+# Adaptive debate gate: a photo earns the skeptic pass when the draft has an
+# item with no database anchor, at least this many items (misses get likely),
+# or a total uncertainty band wider than this fraction of the midpoint.
+# Defaults from the improvement spec; calibrate against benchmark data once a
+# sweep with per-verdict records exists.
+DEBATE_MIN_ITEMS = 6
+DEBATE_WIDTH_TRIGGER = 0.35

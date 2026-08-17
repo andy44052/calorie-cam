@@ -16,8 +16,10 @@ load_dotenv()  # also pick up a .env in the current working directory
 
 import anthropic  # noqa: E402
 
-from caloriecam import pipeline, report  # noqa: E402
-from caloriecam.config import DEFAULT_MODEL, MAX_IMAGE_PX  # noqa: E402
+import sqlite3  # noqa: E402
+
+from caloriecam import history, pipeline, report  # noqa: E402
+from caloriecam.config import DEFAULT_MODEL, HINT_MAX_CHARS, MAX_IMAGE_PX  # noqa: E402
 from caloriecam.vision import RefusalError, VisionError  # noqa: E402
 
 
@@ -40,13 +42,31 @@ def main(argv: list[str] | None = None) -> int:
         action="store_false",
         help="skip the adversarial second-opinion pass (faster, cheaper, less accurate)",
     )
+    parser.add_argument(
+        "--skeptic-model",
+        default=None,
+        help="run the critic+reviser on a cheaper model (e.g. claude-haiku-4-5)",
+    )
+    parser.add_argument(
+        "--no-history",
+        dest="history",
+        action="store_false",
+        help="don't log this meal or blend portions with past meals",
+    )
     args = parser.parse_args(argv)
+
+    store = history.default_store() if args.history else None
 
     failures = 0
     for image in args.images:
         try:
-            meal, _analysis = pipeline.run(
-                image, model=args.model, hint=args.hint, debate=args.debate
+            meal, analysis = pipeline.run(
+                image,
+                model=args.model,
+                hint=args.hint,
+                debate=args.debate,
+                skeptic_model=args.skeptic_model,
+                history=store,
             )
         except FileNotFoundError:
             print(f"error: file not found: {image}", file=sys.stderr)
@@ -94,10 +114,24 @@ def main(argv: list[str] | None = None) -> int:
             failures += 1
             continue
 
+        payload = report.to_dict(meal, image)
+        if store is not None and meal.items:
+            try:
+                payload["meal_id"] = store.record(
+                    meal, analysis, model=args.model,
+                    hint=(args.hint or "")[:HINT_MAX_CHARS] or None,
+                )
+                payload["today"] = store.today_total()
+            except sqlite3.Error as exc:
+                print(f"warning: could not record meal in history ({exc})", file=sys.stderr)
+
         if args.json:
-            print(json.dumps(report.to_dict(meal, image), indent=2))
+            print(json.dumps(payload, indent=2))
         else:
             print(report.to_text(meal, image))
+            if "today" in payload:
+                today = payload["today"]
+                print(f"today so far: ~{today['kcal']} kcal across {today['meals']} meal(s)")
             print()
 
     return 1 if failures else 0

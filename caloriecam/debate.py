@@ -185,16 +185,21 @@ def run_debate(
     client=None,
     hint: Optional[str] = None,
     ledger=None,
+    skeptic_model: Optional[str] = None,
 ) -> tuple[FoodAnalysis, Optional[dict]]:
     """Challenge the draft; return (final_analysis, debate_record).
 
     The record is None when there was nothing to debate (no items found).
+    ``skeptic_model`` runs the critic and reviser on a different (cheaper)
+    model than the primary analyst; None keeps everything on ``model``.
     """
     if not draft.items:
         return draft, None
 
+    debate_model = skeptic_model or model
     critique = criticize(
-        image_b64, media_type, draft, model=model, client=client, hint=hint, ledger=ledger
+        image_b64, media_type, draft, model=debate_model, client=client, hint=hint,
+        ledger=ledger,
     )
     record = {
         "challenges": [c.model_dump() for c in critique.challenges],
@@ -209,11 +214,13 @@ def run_debate(
         media_type,
         draft,
         critique,
-        model=model,
+        model=debate_model,
         client=client,
         hint=hint,
         ledger=ledger,
     )
+    if skeptic_model:
+        record["skeptic_model"] = skeptic_model
     record["rulings"] = [r.model_dump() for r in debated.rulings]
     # Per-verdict counts, not just a corrections tally: "partially accepted"
     # is real pushback (the analyst moved less than demanded), so collapsing
