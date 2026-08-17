@@ -1,4 +1,4 @@
-{
+﻿{
   "provenance": "Compiled by the project owner from USDA data and aggregated sources (2026-08); combined-dish values and red-team-audit entries added from USDA/FNDDS-style as-prepared figures. kcal_per_100g is for the food as typically prepared. loose_match marks combined dishes that absorb ingredient words; exclude_tokens blocks meaning-changing words.",
   "foods": [
     {"name": "apple", "aliases": ["apple", "apples"], "kcal_per_100g": 52, "typical_serving_g": 185, "exclude_tokens": ["baked", "candied", "caramel"]},
@@ -7,7 +7,7 @@
     {"name": "strawberries", "aliases": ["strawberry", "strawberries"], "kcal_per_100g": 33, "typical_serving_g": 150},
     {"name": "blueberries", "aliases": ["blueberry", "blueberries"], "kcal_per_100g": 57, "typical_serving_g": 148},
     {"name": "watermelon", "aliases": ["watermelon"], "kcal_per_100g": 30, "typical_serving_g": 150},
-    {"name": "grapes", "aliases": ["grape", "grapes"], "kcal_per_100g": 69, "typical_serving_g": 150},
+    {"name": "grapes", "aliases": ["grape", "grapes", "black grapes", "seedless grapes", "black seedless grapes", "green grapes", "red grapes"], "kcal_per_100g": 69, "typical_serving_g": 150},
     {"name": "avocado", "aliases": ["avocado", "half avocado"], "kcal_per_100g": 160, "typical_serving_g": 100},
     {"name": "broccoli, cooked", "aliases": ["broccoli", "steamed broccoli", "cooked broccoli", "roasted broccoli"], "kcal_per_100g": 35, "typical_serving_g": 155},
     {"name": "spinach, raw", "aliases": ["spinach", "baby spinach"], "kcal_per_100g": 23, "typical_serving_g": 60},
@@ -15,7 +15,7 @@
     {"name": "baked potato (with skin)", "aliases": ["baked potato", "potato", "jacket potato", "boiled potatoes"], "kcal_per_100g": 93, "typical_serving_g": 170},
     {"name": "roasted potatoes", "aliases": ["roasted potatoes", "roast potatoes"], "kcal_per_100g": 140, "typical_serving_g": 170},
     {"name": "mashed potatoes (with milk and butter)", "aliases": ["mashed potatoes", "mashed potato", "mash"], "kcal_per_100g": 110, "typical_serving_g": 210},
-    {"name": "sweet potato (plain)", "aliases": ["sweet potato", "sweet potatoes", "baked sweet potato"], "kcal_per_100g": 90, "typical_serving_g": 150, "exclude_tokens": ["fries", "pie", "casserole", "wedges"]},
+    {"name": "sweet potato (plain)", "aliases": ["sweet potato", "sweet potatoes", "baked sweet potato", "sweet potato cubes"], "kcal_per_100g": 90, "typical_serving_g": 150, "exclude_tokens": ["fries", "pie", "casserole", "wedges"]},
     {"name": "tomato", "aliases": ["tomato", "tomatoes", "cherry tomatoes"], "kcal_per_100g": 18, "typical_serving_g": 120},
     {"name": "corn, cooked", "aliases": ["corn", "corn on the cob", "sweet corn"], "kcal_per_100g": 96, "typical_serving_g": 150},
     {"name": "chicken breast, cooked", "aliases": ["chicken breast", "grilled chicken", "grilled chicken breast", "chicken fillet", "roasted chicken breast", "baked chicken breast"], "kcal_per_100g": 165, "typical_serving_g": 100, "exclude_tokens": ["wrap", "sandwich", "salad", "burrito"]},
@@ -24,7 +24,7 @@
     {"name": "fried chicken (breaded)", "aliases": ["fried chicken", "breaded chicken", "chicken tenders", "chicken nuggets", "chicken strips"], "kcal_per_100g": 265, "typical_serving_g": 140, "exclude_tokens": ["grilled", "baked", "roasted", "rice"]},
     {"name": "chicken katsu (breaded cutlet)", "aliases": ["katsu", "chicken katsu", "tonkatsu", "pork katsu", "chicken cutlet", "breaded cutlet", "schnitzel"], "kcal_per_100g": 270, "typical_serving_g": 150},
     {"name": "ground beef (80-85% lean), cooked", "aliases": ["ground beef", "beef patty", "hamburger patty", "minced beef"], "kcal_per_100g": 245, "typical_serving_g": 100},
-    {"name": "steak, cooked", "aliases": ["steak", "sirloin steak", "ribeye", "beef steak"], "kcal_per_100g": 270, "typical_serving_g": 170, "exclude_tokens": ["stew"]},
+    {"name": "steak, cooked", "aliases": ["steak", "sirloin steak", "ribeye", "beef steak", "filet mignon", "filet mignon steak", "filet steak", "beef tenderloin", "tenderloin steak", "pan seared steak", "pan seared filet mignon steak"], "kcal_per_100g": 270, "typical_serving_g": 170, "exclude_tokens": ["stew"]},
     {"name": "beef stew", "aliases": ["beef stew", "stew", "irish stew"], "kcal_per_100g": 110, "typical_serving_g": 300},
     {"name": "pork chop, cooked", "aliases": ["pork chop", "pork loin", "pork"], "kcal_per_100g": 230, "typical_serving_g": 130},
     {"name": "bacon, cooked", "aliases": ["bacon", "bacon strips", "crispy bacon"], "kcal_per_100g": 540, "typical_serving_g": 25},
@@ -39,13 +39,13 @@
     {"name": "fried shrimp (breaded)", "aliases": ["fried shrimp", "breaded shrimp", "shrimp tempura", "popcorn shrimp", "coconut shrimp"], "kcal_per_100g": 270, "typical_serving_g": 120},
     {"name": "tuna, canned in water", "aliases": ["tuna", "canned tuna"], "kcal_per_100g": 115, "typical_serving_g": 85, "exclude_tokens": ["steak", "grilled", "seared", "ahi"]},
     {"name": "tofu", "aliases": ["tofu"], "kcal_per_100g": 80, "typical_serving_g": 120},
-    {"name": "white rice, cooked", "aliases": ["rice", "white rice", "steamed rice", "steamed white rice", "jasmine rice", "basmati rice"], "kcal_per_100g": 130, "typical_serving_g": 160},
+    {"name": "white rice, cooked", "aliases": ["rice", "white rice", "steamed rice", "steamed white rice", "jasmine rice", "basmati rice", "white rice with sesame seeds"], "kcal_per_100g": 130, "typical_serving_g": 160},
     {"name": "brown rice, cooked", "aliases": ["brown rice"], "kcal_per_100g": 123, "typical_serving_g": 160},
     {"name": "fried rice", "aliases": ["fried rice", "chicken fried rice", "vegetable fried rice", "egg fried rice", "shrimp fried rice", "beef fried rice", "pork fried rice"], "kcal_per_100g": 175, "typical_serving_g": 200, "loose_match": true, "exclude_tokens": ["cauliflower", "quinoa", "konjac", "ball", "arancini"]},
     {"name": "pasta, cooked (plain)", "aliases": ["pasta", "spaghetti", "noodles", "penne", "macaroni", "penne pasta", "spaghetti noodles", "spaghetti pasta", "pasta noodles", "egg noodles"], "kcal_per_100g": 150, "typical_serving_g": 140, "exclude_tokens": ["alfredo", "carbonara", "bolognese", "mac"]},
     {"name": "spaghetti with meat sauce", "aliases": ["spaghetti with meat sauce", "spaghetti bolognese", "pasta with meat sauce", "pasta bolognese", "spaghetti and meatballs"], "kcal_per_100g": 140, "typical_serving_g": 250, "loose_match": true, "exclude_tokens": ["squash", "zucchini"]},
     {"name": "pasta with marinara (no meat)", "aliases": ["spaghetti with marinara sauce", "pasta with marinara sauce", "spaghetti with tomato sauce", "pasta with tomato sauce", "marinara pasta", "pasta marinara"], "kcal_per_100g": 100, "typical_serving_g": 250, "loose_match": true, "exclude_tokens": ["squash", "zucchini"]},
-    {"name": "pasta alfredo", "aliases": ["pasta alfredo", "alfredo pasta", "fettuccine alfredo", "chicken alfredo", "alfredo"], "kcal_per_100g": 170, "typical_serving_g": 250, "loose_match": true, "exclude_tokens": ["sauce", "dip", "lean", "frozen"]},
+    {"name": "pasta alfredo", "aliases": ["pasta alfredo", "alfredo pasta", "fettuccine alfredo", "chicken alfredo", "alfredo", "creamy fettuccine", "creamy pasta"], "kcal_per_100g": 170, "typical_serving_g": 250, "loose_match": true, "exclude_tokens": ["sauce", "dip", "lean", "frozen"]},
     {"name": "mac and cheese", "aliases": ["mac and cheese", "macaroni and cheese", "mac n cheese"], "kcal_per_100g": 200, "typical_serving_g": 200, "loose_match": true, "exclude_tokens": ["cauliflower", "fried", "bites", "big"]},
     {"name": "lasagna", "aliases": ["lasagna", "lasagne"], "kcal_per_100g": 140, "typical_serving_g": 250, "loose_match": true, "exclude_tokens": ["zucchini", "eggplant", "squash", "soup"]},
     {"name": "ramen (prepared)", "aliases": ["ramen", "ramen noodles", "instant noodles"], "kcal_per_100g": 90, "typical_serving_g": 400, "loose_match": true, "exclude_tokens": ["dry", "uncooked", "stir", "burger"]},
@@ -118,6 +118,18 @@
     {"name": "sweet potato fries", "aliases": ["sweet potato fries"], "kcal_per_100g": 280, "typical_serving_g": 110},
     {"name": "potato chips (crisps)", "aliases": ["potato chips", "crisps", "potato crisps"], "kcal_per_100g": 530, "typical_serving_g": 40},
     {"name": "tortilla chips", "aliases": ["tortilla chips", "corn chips"], "kcal_per_100g": 490, "typical_serving_g": 40},
-    {"name": "onion rings (fried)", "aliases": ["onion rings"], "kcal_per_100g": 410, "typical_serving_g": 85}
+    {"name": "onion rings (fried)", "aliases": ["onion rings"], "kcal_per_100g": 410, "typical_serving_g": 85},
+
+    {"name": "lemon bar", "aliases": ["lemon bar", "lemon bars", "lemon square", "lemon squares"], "kcal_per_100g": 370, "typical_serving_g": 60, "loose_match": true, "exclude_tokens": ["cake", "pie", "cheesecake", "meringue"]},
+    {"name": "artisan bread (baguette/sourdough/rye)", "aliases": ["baguette", "ciabatta", "sourdough", "sourdough bread", "rye bread", "seeded bread", "sesame bread", "bread loaf", "rustic bread", "sesame loaf", "artisan bread", "multigrain bread"], "kcal_per_100g": 270, "typical_serving_g": 60, "loose_match": true, "exclude_tokens": ["banana", "garlic", "olive", "zucchini", "corn", "pumpkin", "pudding", "stuffing", "crouton", "croutons", "sandwich", "toast", "pizza"]},
+    {"name": "blue cheese", "aliases": ["blue cheese", "blue cheese wedge", "gorgonzola", "roquefort", "stilton"], "kcal_per_100g": 353, "typical_serving_g": 30, "exclude_tokens": ["dressing", "dip", "sauce", "salad", "burger", "wings"]},
+    {"name": "feta cheese", "aliases": ["feta", "feta cheese", "feta cubes"], "kcal_per_100g": 265, "typical_serving_g": 30, "loose_match": true, "exclude_tokens": ["salad", "wrap", "pasta", "watermelon", "pizza", "spanakopita", "dip"]},
+    {"name": "tuna salad sandwich", "aliases": ["tuna salad sandwich", "tuna sandwich"], "kcal_per_100g": 240, "typical_serving_g": 200, "loose_match": true, "exclude_tokens": ["melt", "wrap", "sushi"]},
+    {"name": "breadsticks / grissini (pastry twists)", "aliases": ["breadsticks", "breadstick", "grissini", "twisted breadsticks", "pastry twists", "bread sticks"], "kcal_per_100g": 460, "typical_serving_g": 30, "loose_match": true, "exclude_tokens": ["garlic", "soft", "cheese", "mozzarella", "olive"]},
+    {"name": "chickpeas, cooked", "aliases": ["chickpeas", "chick peas", "garbanzo beans", "garbanzos"], "kcal_per_100g": 164, "typical_serving_g": 130, "exclude_tokens": ["crunchy", "snack", "flour", "hummus", "falafel", "curry", "salad", "fried"]},
+    {"name": "walnuts", "aliases": ["walnut", "walnuts", "walnut halves", "walnut pieces"], "kcal_per_100g": 654, "typical_serving_g": 28, "exclude_tokens": ["cake", "bread", "brownie", "banana", "muffin", "salad", "candied"]},
+    {"name": "cured meats / charcuterie", "aliases": ["cured meats", "charcuterie", "cold cuts", "deli meats", "salami", "prosciutto", "salami and prosciutto"], "kcal_per_100g": 370, "typical_serving_g": 50, "loose_match": true, "exclude_tokens": ["sandwich", "pizza", "panini", "sub", "wrap", "pasta"]},
+    {"name": "roast chicken (with skin)", "aliases": ["roast chicken", "roasted chicken", "rotisserie chicken", "roast chicken with skin", "roasted chicken with skin"], "kcal_per_100g": 239, "typical_serving_g": 200, "loose_match": true, "exclude_tokens": ["soup", "salad", "sandwich", "wrap", "curry", "wing", "wings", "fried", "nugget", "nuggets", "tender", "tenders", "pie", "noodle", "rice", "katsu", "cutlet", "stir", "breast"]},
+    {"name": "crackers (butter/snack)", "aliases": ["crackers", "cracker", "butter crackers", "square butter crackers", "square crackers", "ritz crackers", "ritz"], "kcal_per_100g": 500, "typical_serving_g": 15, "exclude_tokens": ["graham", "rice", "animal"]}
   ]
 }

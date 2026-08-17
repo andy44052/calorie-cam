@@ -217,7 +217,13 @@ def test_big_mac_meal_not_matched_as_single_item():
 
 
 def test_double_cheeseburger_not_matched_to_single_patty():
-    assert resolve(_food("double cheeseburger", grams=280)) is None
+    # Originally asserted None (the single-patty entry must never claim a
+    # double). Since the DB-coverage cycle there IS a Double entry - the
+    # invariant is now that the DOUBLE entry claims it, never the single.
+    res = resolve(_food("double cheeseburger", grams=280))
+    assert res is not None
+    assert res.matched_name == "Double cheeseburger"
+    assert res.kcal_mid == 600  # not the 275 single-patty figure
 
 
 def test_taco_count_scaling():

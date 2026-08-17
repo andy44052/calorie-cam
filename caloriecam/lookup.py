@@ -14,6 +14,7 @@ entry itself is a combined dish that absorbs ingredient words (loose_match).
 """
 
 import json
+import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -103,11 +104,19 @@ def _score(
     return len(item_tokens & b) / len(item_tokens | b)
 
 
-def _entry_score(item_name: str, entry: dict, extra_ok: frozenset = frozenset()) -> float:
+def _entry_score(
+    item_name: str,
+    entry: dict,
+    extra_ok: frozenset = frozenset(),
+    veto_tokens: Optional[frozenset] = None,
+) -> float:
     item_tokens = _tokens(item_name)
     # Item tokens are stemmed, so exclude tokens must be stemmed too or
-    # plural excludes ("fries") silently never fire.
-    if any(_stem(t) in item_tokens for t in entry.get("exclude_tokens", [])):
+    # plural excludes ("fries") silently never fire. On retry variants the
+    # excludes are checked against the ORIGINAL full name (veto_tokens) -
+    # stripping "(banana)" must not un-veto the bread entry.
+    guarded = veto_tokens if veto_tokens is not None else item_tokens
+    if any(_stem(t) in guarded for t in entry.get("exclude_tokens", [])):
         return 0.0
     loose = bool(entry.get("loose_match"))
     display = entry.get("item") or entry.get("name") or ""
@@ -149,7 +158,9 @@ def _display_name(entry: dict) -> str:
     return entry["item"]
 
 
-def match_menu_item(item: FoodItem) -> Optional[Resolution]:
+def match_menu_item(
+    item: FoodItem, veto_tokens: Optional[frozenset] = None
+) -> Optional[Resolution]:
     best: Optional[dict] = None
     best_score = 0.0
     for entry in _menu_items():
@@ -158,7 +169,7 @@ def match_menu_item(item: FoodItem) -> Optional[Resolution]:
         # Brand words in the item name ("McDonald's Big Mac") are not a
         # mismatch signal.
         extra_ok = _tokens(entry.get("brand") or "")
-        score = _entry_score(item.name, entry, extra_ok)
+        score = _entry_score(item.name, entry, extra_ok, veto_tokens)
         # A brand-specific entry whose brand check passed outranks a brandless
         # entry at the same score ("In-N-Out Cheeseburger" -> the In-N-Out
         # entry, not the generic hamburger).
@@ -198,11 +209,13 @@ def match_menu_item(item: FoodItem) -> Optional[Resolution]:
     )
 
 
-def match_generic(item: FoodItem) -> Optional[Resolution]:
+def match_generic(
+    item: FoodItem, veto_tokens: Optional[frozenset] = None
+) -> Optional[Resolution]:
     best: Optional[dict] = None
     best_score = 0.0
     for entry in _generic_foods():
-        score = _entry_score(item.name, entry)
+        score = _entry_score(item.name, entry, veto_tokens=veto_tokens)
         if score > best_score:
             best, best_score = entry, score
     if best is None or best_score < GENERIC_THRESHOLD:
@@ -215,8 +228,66 @@ def match_generic(item: FoodItem) -> Optional[Resolution]:
     )
 
 
+# --- retry normalizations (reviewed & approved 2026-08-17) -------------------
+# Two retries only. The aggressive subset+density mechanism was red-teamed and
+# REJECTED: composed dishes converge to within 1.6x of their own ingredients
+# (sandwich~bread, butter crackers~butter), so density cannot certify identity.
+
+_PAREN_RE = re.compile(r"[(\[][^)\]]*[)\]]")
+# Words that introduce a garnish/serving clause, not a different food.
+_HEAD_RE = re.compile(
+    r"\s+(?:with|topped|served|garnished|drizzled|dusted|sprinkled)\s+", re.IGNORECASE
+)
+
+
+@lru_cache(maxsize=1)
+def _db_food_vocab() -> frozenset:
+    """Every non-modifier token that appears in any DB name or alias."""
+    vocab: set[str] = set()
+    for entry in _generic_foods():
+        for alias in [entry["name"], *entry.get("aliases", [])]:
+            vocab.update(t for t in _tokens(alias) if t not in _MODIFIERS)
+    for entry in _menu_items():
+        for alias in [entry["item"], *entry.get("aliases", [])]:
+            vocab.update(t for t in _tokens(alias) if t not in _MODIFIERS)
+    return frozenset(vocab)
+
+
+def _retry_variants(name: str) -> list[str]:
+    """Safe alternate spellings of a verbose item name, most conservative first."""
+    variants: list[str] = []
+    stripped = _PAREN_RE.sub(" ", name).strip()
+    if stripped and _tokens(stripped) != _tokens(name):
+        variants.append(stripped)
+
+    # Head of a garnish clause: "french fries with seasoning" -> "french
+    # fries". Only when the discarded tail is garnish-sized (<=2 core tokens)
+    # and names no DB food - "chicken with rice" must NOT collapse to chicken.
+    parts = _HEAD_RE.split(stripped or name, maxsplit=1)
+    if len(parts) == 2 and parts[0].strip():
+        head, tail = parts[0].strip(), parts[1]
+        tail_core = {
+            t for t in _tokens(tail) if t not in _MODIFIERS and not t.isdigit()
+        }
+        if len(tail_core) <= 2 and not (tail_core & _db_food_vocab()):
+            if _tokens(head) not in (_tokens(name), *map(_tokens, variants)):
+                variants.append(head)
+    return variants
+
+
 def resolve(item: FoodItem) -> Optional[Resolution]:
-    return match_menu_item(item) or match_generic(item)
+    direct = match_menu_item(item) or match_generic(item)
+    if direct is not None:
+        return direct
+    original_tokens = _tokens(item.name)
+    for variant in _retry_variants(item.name):
+        retry = item.model_copy(update={"name": variant})
+        res = match_menu_item(retry, original_tokens) or match_generic(
+            retry, original_tokens
+        )
+        if res is not None:
+            return res
+    return None
 
 
 def resolve_all(items: list[FoodItem]) -> list[Optional[Resolution]]:

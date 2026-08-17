@@ -218,7 +218,7 @@
       "serving_g": 107,
       "unit_scalable": true,
       "loose_match": true,
-      "exclude_tokens": ["pepperoni", "meat", "sausage", "supreme", "deep", "stuffed"]
+      "exclude_tokens": ["pepperoni", "meat", "sausage", "supreme", "deep", "stuffed", "salami"]
     },
     {
       "item": "Pepperoni pizza slice (hand-tossed)",
@@ -229,6 +229,26 @@
       "unit_scalable": true,
       "loose_match": true,
       "exclude_tokens": ["deep", "stuffed"]
+    },
+    {
+      "item": "Double cheeseburger",
+      "brand": null,
+      "aliases": ["double cheeseburger", "double cheese burger", "double burger", "double hamburger"],
+      "kcal": {"low": 450, "mid": 600, "high": 750},
+      "serving_g": 220,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["triple", "bacon", "meal", "combo", "animal", "protein"]
+    },
+    {
+      "item": "Triple cheeseburger",
+      "brand": null,
+      "aliases": ["triple cheeseburger", "triple cheese burger", "triple burger", "triple stack cheeseburger", "triple stack burger"],
+      "kcal": {"low": 600, "mid": 800, "high": 1000},
+      "serving_g": 290,
+      "unit_scalable": true,
+      "loose_match": true,
+      "exclude_tokens": ["bacon", "meal", "combo"]
     }
   ]
 }
