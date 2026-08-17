@@ -6,3 +6,5 @@ __pycache__/
 caloriecam/history.db*
 benchmark_results*.jsonl
 misses.csv
+adjudicated_top45.csv
+phase1_audit_report.md

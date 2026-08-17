@@ -188,7 +188,7 @@
       "serving_g": 78,
       "unit_scalable": true,
       "loose_match": true,
-      "exclude_tokens": ["salad", "bowl", "soup"]
+      "exclude_tokens": ["salad", "bowl", "soup", "seasoning", "sauce", "dip"]
     },
     {
       "item": "Egg McMuffin",

@@ -231,6 +231,19 @@ def test_regression_corpus_still_matches():
         ("smoked salmon", None, 205),                        # cooked salmon
         ("sweet potato", None, 280),                         # sweet potato fries
     ]
+    # Menu items have no kcal_per_100g; forbid the match itself.
+    menu_forbidden = [
+        ("taco seasoning", "Crunchy beef taco"),   # found live by the DB-coverage red team
+        ("taco sauce", "Crunchy beef taco"),
+        ("taco dip", "Crunchy beef taco"),
+    ]
+    for query, forbidden_item in menu_forbidden:
+        res = _probe(query)
+        if res is not None and res.matched_name == forbidden_item:
+            failures.append(f"{query!r} still matches {forbidden_item!r}")
+    still_ok = _probe("hard shell tacos")
+    if still_ok is None or still_ok.matched_name != "Crunchy beef taco":
+        failures.append("'hard shell tacos' stopped matching Crunchy beef taco")
     failures = []
     for query, brand, forbidden in known_bugs:
         res = _probe(query, brand=brand)
