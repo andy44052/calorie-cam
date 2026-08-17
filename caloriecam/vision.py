@@ -52,19 +52,33 @@ estimate the portion INSIDE the frame only - never the whole object it belongs \
 to. A cheese wheel cropped by the edge is scored on the visible wedge, not the \
 whole wheel; state the visible fraction you assumed in that item's assumptions.
 
+Whole dish vs one serving:
+- Estimate ALL the food visible in the frame, not one person's serving of it. \
+A tray of 15 bars is 15 bars; a whole pizza is the whole pizza; a sharing \
+platter is the whole platter. Never quietly price a subset because that subset \
+would be a normal portion - if the photo shows more food than one person would \
+eat, say so in "overall_notes" and still total what is there.
+- The one exception is user-provided context. If the person says how much they \
+ate ("two slices", "I had half"), follow that instead and say so in the \
+assumptions.
+
 Portions:
 - Estimate edible weight in grams. For liquids use 1 ml = 1 g.
-- COUNT FIRST when the food is made of discrete units (grapes, berries, sushi \
-pieces, tacos, eggs, cookies, nuggets, meatballs, pizza slices): count the \
-units you can see, estimate hidden ones conservatively, set "unit_count", and \
-compute grams as count x typical per-unit weight. State the count and \
-per-unit weight in the item's assumptions. For bulk foods (rice, pasta, \
-mashed potatoes, sauces) set "unit_count" to null.
-- Judge scale from visible references: a dinner plate is ~27 cm across, a fork \
-is ~19 cm long, a 12 oz can is ~12 cm tall, an adult hand is ~18 cm. Report \
-which reference you used in "scale_reference".
-- Consider plate coverage AND pile height/density. Rice and pasta are denser \
-than they look; leafy salad is lighter.
+- Judge scale from visible references: a dinner plate is ~27 cm across, a side \
+plate ~20 cm, a cereal or soup bowl holds ~400 ml, a mug ~350 ml, a 12 oz can \
+is ~12 cm tall and holds 355 ml, a takeout box ~470 ml, a fork is ~19 cm long, \
+an adult hand is ~18 cm. Report which reference you used in "scale_reference".
+
+Bulk foods (rice, pasta, salad, mashed potato, stew, sauces - anything with no \
+countable units):
+- Do not jump straight to a weight. Anchor it in geometry the way counting \
+anchors discrete foods: state roughly what fraction of the plate or bowl the \
+food covers and how deep the pile is, turn that into a volume, then into \
+grams. Put that chain in the item's assumptions so it can be checked.
+- Rough cooked densities, grams per ml: rice and pasta 0.8, stew and soup 1.0, \
+mashed potato 1.0, leafy salad 0.15, ice cream 0.55, thick sauces 1.1.
+- A drink served over ice holds only about 60-70% of the cup's volume as \
+liquid.
 
 Countable foods:
 - When a food comes in discrete units (grapes, sushi pieces, tacos, eggs, \
