@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Optional
 
 from . import units
 from .schema import FoodAnalysis, FoodItem
+from .text import tokens as _tokens
 
 if TYPE_CHECKING:
     from .lookup import Resolution
@@ -70,6 +71,17 @@ def _clamp(value: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, value))
 
 
+# Words meaning the counted unit is a CUT PIECE of the food, not the whole
+# food a weight band describes. "12 sliced avocado crescents" x the whole-
+# avocado band = 12 avocados (Run A shipped exactly that: a 1,920 kcal salad
+# avocado). Identity-wise these words are harmless; unit-wise they are not.
+_PIECE_WORDS = frozenset({
+    "slice", "sliced", "slices", "crescent", "crescents", "wedge", "wedges",
+    "chunk", "chunks", "cube", "cubed", "cubes", "strip", "strips",
+    "sliver", "slivers", "segment", "segments", "shaving", "shavings",
+})
+
+
 def _unit_band_grams(raw: FoodItem, assumptions: list[str]) -> Optional[float]:
     """Recompute grams as count x per-unit weight, clamped to a known band.
 
@@ -82,6 +94,17 @@ def _unit_band_grams(raw: FoodItem, assumptions: list[str]) -> Optional[float]:
         return None
 
     band = units.find_band(raw.name)
+    if band is not None:
+        # The band must weigh the same unit the model counted. If the item
+        # name says the units are cut pieces and the band's own vocabulary
+        # doesn't (a "maki piece" band legitimately weighs pieces), the band
+        # describes a different unit - keep the model's own arithmetic.
+        item_words = set(_tokens(raw.name)) & _PIECE_WORDS
+        band_words = set(
+            t for alias in (band.name, *band.aliases) for t in _tokens(alias)
+        )
+        if item_words and not (item_words & band_words):
+            band = None
     per_unit = raw.per_unit_grams
     if per_unit is None or per_unit <= 0:
         if band is None:

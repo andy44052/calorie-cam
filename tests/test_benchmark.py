@@ -44,7 +44,8 @@ def test_report_runs_and_summarizes(results, capsys):
     assert benchmark.main(["report", str(results)]) == 0
     out = capsys.readouterr().out
     assert "6 runs over 2 photos" in out
-    assert "a.jpg" in out and "b.jpg" in out
+    # Photo keys are normalized to filename stems so old and new sweeps compare.
+    assert "\na " in out and "\nb " in out
     assert "stability:" in out
     assert "$0.30 total" in out  # 6 runs x $0.05
 

@@ -35,6 +35,9 @@ class UnitBand:
     low_g: float
     typical_g: float
     high_g: float
+    # The vocabulary this band answers to - callers use it to check the band
+    # weighs the same unit the model counted (slices vs whole items).
+    aliases: tuple = ()
 
     def clamp(self, grams: float) -> float:
         return max(self.low_g, min(self.high_g, grams))
@@ -54,6 +57,7 @@ def _bands() -> tuple[tuple[frozenset, UnitBand], ...]:
             low_g=float(entry["low_g"]),
             typical_g=float(entry["typical_g"]),
             high_g=float(entry["high_g"]),
+            aliases=tuple(entry.get("aliases", [])),
         )
         for alias in [entry["name"], *entry.get("aliases", [])]:
             out.append((_tokens(alias), band))

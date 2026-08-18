@@ -177,8 +177,11 @@ def _load(path: Path) -> list[dict]:
 def _by_photo(runs: list[dict]) -> dict[str, list[dict]]:
     out: dict[str, list[dict]] = {}
     for rec in runs:
-        # Older sweeps keyed the photo as "img"/"file" before this harness existed.
-        photo = rec.get("photo") or rec.get("file") or rec.get("img")
+        # Older sweeps keyed the photo as "img"/"file" before this harness
+        # existed; "img" is the display name, "file" the full path. Keys are
+        # normalized to the filename stem so eras compare ("img01" == "img01.jpg").
+        photo = rec.get("photo") or rec.get("img") or rec.get("file")
+        photo = Path(photo).stem if photo else None
         if photo is None:
             raise ValueError(
                 "results file has no photo identifier on its runs - it was "
@@ -283,7 +286,10 @@ def cmd_report(args: argparse.Namespace) -> int:
         print(f"  {counted} items used a unit count ({100*counted/len(items):.0f}%)")
 
     # Confidence calibration (needs truth)
-    truth = json.loads(Path(args.truth).read_text(encoding="utf-8")) if args.truth else None
+    truth = None
+    if args.truth:
+        raw_truth = json.loads(Path(args.truth).read_text(encoding="utf-8"))
+        truth = {Path(k).stem: v for k, v in raw_truth.items()}  # match photo keys
     if truth:
         print("\naccuracy vs truth:")
         errs = []

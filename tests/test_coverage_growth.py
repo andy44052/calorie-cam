@@ -4,7 +4,7 @@ normalizations - every recovery pinned, every red-team trap asserted dead."""
 import pytest
 
 from caloriecam.lookup import _retry_variants, resolve
-from caloriecam.schema import FoodItem
+from caloriecam.schema import FoodAnalysis, FoodItem
 
 
 def _probe(name: str, brand: str | None = None, grams: float = 150.0,
@@ -127,6 +127,32 @@ def test_prosciutto_books_prosciutto_not_mixed_board_density():
 def test_crostini_are_a_composite_not_cured_meat():
     assert _probe("salami and prosciutto crostini") is None
     assert _probe("salami and cream cheese crostini") is None
+
+
+def test_counted_slices_never_weigh_as_whole_items():
+    """Run A shipped a 1,920 kcal salad avocado: 12 counted crescents x the
+    whole-avocado band's 100 g minimum. A band may only reprice a count when
+    it weighs the unit that was counted."""
+    from caloriecam.sanity import evaluate
+
+    sliced = FoodItem(
+        name="sliced avocado", portion_description="fanned crescents",
+        estimated_grams=150, kcal_per_100g=160, unit_count=12,
+        per_unit_grams=12.0, confidence="medium", assumptions=[],
+    )
+    meal = evaluate(FoodAnalysis(items=[sliced], scale_reference="bowl"), [None])
+    # 12 x 12 g = 144 g of avocado, not 12 x 100 g = 1200 g.
+    assert meal.items[0].grams <= 200
+
+    # Counter-case: a band whose own vocabulary is per-piece still applies.
+    slices = FoodItem(
+        name="bread slices", portion_description="stack",
+        estimated_grams=320, kcal_per_100g=267, unit_count=4,
+        per_unit_grams=80.0, confidence="medium", assumptions=[],
+    )
+    meal2 = evaluate(FoodAnalysis(items=[slices], scale_reference="plate"), [None])
+    # The bread-slice band clamps 80 g/slice down into its 22-45 g range.
+    assert meal2.items[0].grams <= 4 * 45
 
 
 def test_kalamata_olives_book_kalamata_density():
