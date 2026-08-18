@@ -108,6 +108,34 @@ def test_charcuterie_does_not_claim_composites():
     assert res is None or "charcuterie" not in res.matched_name
 
 
+# --- caught by the 69-run replay, not by isolated probes ---------------------
+
+def test_location_notes_cannot_feed_the_charcuterie_entry():
+    """The vision model writes position notes into names. 'charcuterie plate'
+    as a LOCATION must not book smoked salmon at cured-meat density (the one
+    wrong match the replay found: 117 -> 370 kcal/100g)."""
+    res = _probe("smoked salmon slices (loose, top-right charcuterie plate)")
+    assert res is None or "charcuterie" not in res.matched_name
+
+
+def test_prosciutto_books_prosciutto_not_mixed_board_density():
+    res = _probe("prosciutto / cured ham slices")
+    assert res is not None and res.matched_name == "prosciutto"
+    assert res.kcal_per_100g == 250  # not the 370 salami-weighted figure
+
+
+def test_crostini_are_a_composite_not_cured_meat():
+    assert _probe("salami and prosciutto crostini") is None
+    assert _probe("salami and cream cheese crostini") is None
+
+
+def test_roasted_sweet_potato_cubes_stay_model_estimate():
+    """Oil-roasted cubes at the plain-90 density was a -31% booking; the
+    model's own estimate is closer. Alias deliberately removed."""
+    res = _probe("roasted sweet potato cubes", kcal100=130.0)
+    assert res is None
+
+
 def test_lemon_garnish_is_not_dessert():
     res = _probe("lemon slices")
     assert res is None or res.matched_name != "lemon bar"
