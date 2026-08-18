@@ -129,6 +129,16 @@ def test_crostini_are_a_composite_not_cured_meat():
     assert _probe("salami and cream cheese crostini") is None
 
 
+def test_kalamata_olives_book_kalamata_density():
+    """Two independent vision passes put kalamata at ~220-240 kcal/100g; the
+    general cured-olive 145 figure under-booked them by ~1.6x."""
+    res = _probe("kalamata olives")
+    assert res is not None and res.matched_name == "kalamata olives"
+    assert res.kcal_per_100g == 230
+    res = _probe("mixed marinated olives")
+    assert res is not None and res.matched_name == "olives (cured)"
+
+
 def test_roasted_sweet_potato_cubes_stay_model_estimate():
     """Oil-roasted cubes at the plain-90 density was a -31% booking; the
     model's own estimate is closer. Alias deliberately removed."""

@@ -65,9 +65,10 @@ assumptions.
 Portions:
 - Estimate edible weight in grams. For liquids use 1 ml = 1 g.
 - Judge scale from visible references: a dinner plate is ~27 cm across, a side \
-plate ~20 cm, a cereal or soup bowl holds ~400 ml, a mug ~350 ml, a 12 oz can \
-is ~12 cm tall and holds 355 ml, a takeout box ~470 ml, a fork is ~19 cm long, \
-an adult hand is ~18 cm. Report which reference you used in "scale_reference".
+plate ~20 cm, a western cereal or soup bowl holds ~400 ml, a SMALL ASIAN RICE \
+BOWL only ~250-300 ml, a mug ~350 ml, a 12 oz can is ~12 cm tall and holds \
+355 ml, a takeout box ~470 ml, a fork is ~19 cm long, an adult hand is ~18 cm. \
+Report which reference you used in "scale_reference".
 
 Bulk foods (rice, pasta, salad, mashed potato, stew, sauces - anything with no \
 countable units):
