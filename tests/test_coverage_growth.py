@@ -129,6 +129,21 @@ def test_crostini_are_a_composite_not_cured_meat():
     assert _probe("salami and cream cheese crostini") is None
 
 
+def test_runA_tail_recoveries():
+    """Second audit pass (on Run A results) - the remaining reachable misses."""
+    cases = [
+        ("tempura / crunchy maki rolls with spicy mayo drizzle", "sushi roll"),
+        ("assorted nigiri (salmon, white fish, tuna, shrimp)", "sushi roll"),
+        ("eel/spicy tuna topped maki with tobiko", "sushi roll"),
+        ("square wheat crackers", "crackers (butter/snack)"),
+        ("topped crostini / open canapes (prosciutto, salmon)", "topped crostini / canapes"),
+    ]
+    for name, expected in cases:
+        res = _probe(name)
+        assert res is not None, f"{name!r} still unmatched"
+        assert res.matched_name == expected, f"{name!r} -> {res.matched_name!r}"
+
+
 def test_counted_slices_never_weigh_as_whole_items():
     """Run A shipped a 1,920 kcal salad avocado: 12 counted crescents x the
     whole-avocado band's 100 g minimum. A band may only reprice a count when

@@ -1,0 +1,133 @@
+name,cause,runs,median_kcal,impact,note
+tempura / crunchy maki rolls with spicy mayo and tobiko,composite,1,1368,1368,described dish - decomposition candidate
+"topped crostini / open canapés (prosciutto, smoked salmon, avocado spread, mango)",composite,1,990,990,described dish - decomposition candidate
+"assorted crostini canapés (avocado-mango, smoked salmon, prosciutto, cream cheese)",composite,1,924,924,described dish - decomposition candidate
+stuffed mussels in tomato sauce,composite,2,447,894,described dish - decomposition candidate
+taiwanese braised pork belly topping (lu rou),composite,2,427,854,described dish - decomposition candidate
+"roast chicken (half, breast and leg quarter with skin)",composite,1,850,850,described dish - decomposition candidate
+"roasted chicken pieces with rosemary (thigh, drumstick, breast)",composite,1,825,825,described dish - decomposition candidate
+"assorted nigiri (salmon, white fish, tuna, shrimp, avocado)",composite,1,798,798,described dish - decomposition candidate
+"assorted nigiri (salmon, whitefish, tuna, shrimp, avocado)",composite,1,771,771,described dish - decomposition candidate
+roast chicken (skin-on breast and leg quarter) with rosemary,composite,1,725,725,described dish - decomposition candidate
+"crostini with avocado spread, smoked salmon and mango",composite,1,645,645,described dish - decomposition candidate
+square wheat crackers,near_miss_alias,2,319,638,"shares ['cracker', 'square', 'wheat'] with DB entries"
+stuffed peppers / stuffed shells in tomato sauce,composite,1,562,562,described dish - decomposition candidate
+caprese salad with tomato and mozzarella pearls,composite,1,522,522,described dish - decomposition candidate
+roasted sweet potato cubes,near_miss_alias,3,174,522,"shares ['cube', 'potato', 'sweet'] with DB entries"
+taiwanese braised pork belly (lu rou),composite,1,488,488,described dish - decomposition candidate
+olive oil in small glass pitcher,near_miss_alias,1,442,442,"shares ['oil', 'olive'] with DB entries"
+olive oil in serving cruet,near_miss_alias,1,442,442,"shares ['oil', 'olive'] with DB entries"
+spread / sauce dipping cups,branded_unmatched,2,217,434,brand 'In-N-Out Burger' not in fastfood.json
+"caprese salad (tomato slices with mozzarella pearls, herbs and oil)",composite,1,428,428,described dish - decomposition candidate
+seared beef sirloin/tenderloin slices (rare),composite,1,412,412,described dish - decomposition candidate
+seared beef steak slices (rare),composite,1,405,405,described dish - decomposition candidate
+seared beef tenderloin slices (rare),composite,1,400,400,described dish - decomposition candidate
+caprese platter (tomato slices with mozzarella balls),composite,1,380,380,described dish - decomposition candidate
+crostini with cream cheese and salami/prosciutto,composite,1,330,330,described dish - decomposition candidate
+sun-dried tomatoes in oil,composite,3,86,258,described dish - decomposition candidate
+braised napa cabbage with fried tofu,composite,2,127,254,described dish - decomposition candidate
+shrimp in creamy sauce,near_miss_alias,1,243,243,"shares ['creamy', 'sauce', 'shrimp'] with DB entries"
+stir-fried pork with green bell peppers,composite,1,231,231,described dish - decomposition candidate
+herb/garlic compound butter pat,composite,2,114,227,described dish - decomposition candidate
+spread dipping sauce,branded_unmatched,1,213,213,brand 'In-N-Out Burger' not in fastfood.json
+shrimp with creamy cocktail sauce,composite,1,210,210,described dish - decomposition candidate
+vegetable rice pilaf with carrot,composite,1,208,208,described dish - decomposition candidate
+thick white dip (tzatziki / labneh / whipped cheese),composite,1,204,204,described dish - decomposition candidate
+"red wine grapes (on the vine), main cluster",composite,1,200,200,described dish - decomposition candidate
+honey in glass server,not_in_db,1,182,182,no token overlap with any DB entry
+red wine grapes on the vine (main cluster),composite,1,176,176,described dish - decomposition candidate
+green apple (granny smith type),composite,2,88,176,described dish - decomposition candidate
+persimmon (sliced and whole),not_in_db,1,175,175,no token overlap with any DB entry
+soy-braised egg (halved),near_miss_alias,2,82,163,shares ['egg'] with DB entries
+shrimp in cocktail/tomato sauce,composite,1,162,162,described dish - decomposition candidate
+pear,not_in_db,1,160,160,no token overlap with any DB entry
+creamy tahini-style dressing drizzle,composite,1,160,160,described dish - decomposition candidate
+"wine grapes (red/purple, on the vine) - main cluster",composite,1,160,160,described dish - decomposition candidate
+pear (one whole and one half),not_in_db,1,154,154,no token overlap with any DB entry
+pear (whole and half),not_in_db,1,154,154,no token overlap with any DB entry
+honey with dipper,not_in_db,1,152,152,no token overlap with any DB entry
+long cracker sticks / crispbread on cheese board,composite,1,151,151,described dish - decomposition candidate
+crisp toasted bread wafers / tuiles,composite,1,148,148,described dish - decomposition candidate
+persimmon (sliced plus whole fruit),near_miss_alias,1,147,147,shares ['fruit'] with DB entries
+seasoned tomato-carrot rice,near_miss_alias,1,135,135,"shares ['carrot', 'rice', 'tomato'] with DB entries"
+rice with carrot and herbs (seasoned rice),near_miss_alias,1,135,135,"shares ['carrot', 'rice'] with DB entries"
+creamy tahini dressing drizzle,composite,1,132,132,described dish - decomposition candidate
+herb/garlic compound butter,composite,1,130,130,described dish - decomposition candidate
+white beans,near_miss_alias,1,130,130,"shares ['bean', 'white'] with DB entries"
+creamy tahini-style dressing,near_miss_alias,1,120,120,"shares ['creamy', 'dressing'] with DB entries"
+thin toasted flatbread crisps (shards),composite,1,120,120,described dish - decomposition candidate
+creamy white dip (tzatziki/labneh style),composite,1,117,117,described dish - decomposition candidate
+miso soup,near_miss_alias,2,57,114,shares ['soup'] with DB entries
+creamy yoghurt dip (tzatziki/labneh style),composite,1,108,108,described dish - decomposition candidate
+honey in small dish with dipper,not_in_db,1,106,106,no token overlap with any DB entry
+persimmon slices,not_in_db,1,105,105,no token overlap with any DB entry
+black grapes on cheese board,composite,1,104,104,described dish - decomposition candidate
+red apple (gala/fuji type),composite,1,104,104,described dish - decomposition candidate
+red apple (gala/jazz type),composite,1,104,104,described dish - decomposition candidate
+mandarin half,not_in_db,3,32,96,no token overlap with any DB entry
+red apple (gala/jonagold type),composite,1,91,91,described dish - decomposition candidate
+"white beans or chickpeas, cooked",composite,1,87,87,described dish - decomposition candidate
+soy-braised egg,near_miss_alias,1,83,83,shares ['egg'] with DB entries
+green apple (granny smith),composite,1,83,83,described dish - decomposition candidate
+mandarin orange (clementine) with stem and leaf,composite,2,40,81,described dish - decomposition candidate
+pink beverage in glass (lemonade / rosé / juice),composite,1,80,80,described dish - decomposition candidate
+powdered (icing) sugar in sieve,composite,1,78,78,described dish - decomposition candidate
+crisp bread tuiles / toasted crostini shards,composite,1,76,76,described dish - decomposition candidate
+"pink beverage (unidentified, possibly rosé, lemonade or flavored water)",composite,1,75,75,described dish - decomposition candidate
+pan juices / finishing oil,composite,1,75,75,described dish - decomposition candidate
+pan jus / steak drippings,composite,3,20,60,described dish - decomposition candidate
+sautéed mushrooms,near_miss_alias,2,28,56,shares ['mushroom'] with DB entries
+roasted onion / root vegetable pieces,near_miss_alias,1,54,54,"shares ['onion', 'vegetable'] with DB entries"
+miso soup with wakame,near_miss_alias,1,49,49,shares ['soup'] with DB entries
+"red wine grapes (on the vine), second cluster (upper right)",composite,1,48,48,described dish - decomposition candidate
+"wine grapes (red/purple, on the vine) - second cluster, partially in frame",composite,1,45,45,described dish - decomposition candidate
+mandarin orange (satsuma/tangerine) with stem and leaf,composite,1,45,45,described dish - decomposition candidate
+butter-confit pale vegetable (onion petals / celeriac),composite,1,40,40,described dish - decomposition candidate
+braising sauce / rendered pork fat,composite,1,39,39,described dish - decomposition candidate
+"red wine grapes on the vine (second cluster, visible portion)",composite,1,39,39,described dish - decomposition candidate
+braising sauce absorbed into rice,composite,1,36,36,described dish - decomposition candidate
+cherry tomatoes on the vine,near_miss_alias,2,18,36,"shares ['cherry', 'tomato'] with DB entries"
+whipped cheese / vegetable purée dollop,composite,1,36,36,described dish - decomposition candidate
+oil / vinaigrette drizzle,near_miss_alias,1,35,35,shares ['oil'] with DB entries
+pan jus / reduction sauce,composite,1,33,33,described dish - decomposition candidate
+lemon halves and wedges (garnish),composite,1,32,32,described dish - decomposition candidate
+roasted potato / root vegetable pieces,near_miss_alias,1,31,31,"shares ['potato', 'vegetable'] with DB entries"
+beef jus / reduction sauce,composite,1,31,31,described dish - decomposition candidate
+cocktail (vine) tomatoes,near_miss_alias,1,30,30,shares ['tomato'] with DB entries
+reduced meat jus,near_miss_alias,1,29,29,"shares ['meat', 'reduced'] with DB entries"
+blanched bok choy,not_in_db,2,14,27,no token overlap with any DB entry
+shredded red cabbage,near_miss_alias,3,9,27,shares ['red'] with DB entries
+lemon slices,near_miss_alias,2,12,25,shares ['lemon'] with DB entries
+yellow bell pepper slices,not_in_db,3,8,24,no token overlap with any DB entry
+soy sauce with wasabi,near_miss_alias,1,24,24,shares ['sauce'] with DB entries
+soy braising sauce spooned over rice,composite,1,22,22,described dish - decomposition candidate
+dark tea beverage,not_in_db,1,22,22,no token overlap with any DB entry
+green leaf lettuce,near_miss_alias,3,7,21,shares ['green'] with DB entries
+lemon halves and wedges (garnish/juiced),composite,1,20,20,described dish - decomposition candidate
+watermelon radish slices,near_miss_alias,3,6,18,shares ['watermelon'] with DB entries
+tea or lightly sweetened dark beverage,composite,1,18,18,described dish - decomposition candidate
+pickled ginger (gari),not_in_db,1,15,15,no token overlap with any DB entry
+small orange sweet peppers,near_miss_alias,1,14,14,"shares ['orange', 'sweet'] with DB entries"
+diced tomato salsa (pico de gallo),composite,1,14,14,described dish - decomposition candidate
+diced tomato and pepper salsa,near_miss_alias,1,14,14,shares ['tomato'] with DB entries
+cucumber ribbons,not_in_db,3,4,12,no token overlap with any DB entry
+juiced lemon half,near_miss_alias,1,12,12,shares ['lemon'] with DB entries
+diced tomato and red pepper salsa,composite,1,12,12,described dish - decomposition candidate
+pickled ginger,not_in_db,2,6,11,no token overlap with any DB entry
+small sweet/pickled orange peppers,composite,1,10,10,described dish - decomposition candidate
+small sweet orange peppers,near_miss_alias,1,9,9,"shares ['orange', 'sweet'] with DB entries"
+blanched baby bok choy,composite,1,9,9,described dish - decomposition candidate
+soy sauce,near_miss_alias,1,9,9,shares ['sauce'] with DB entries
+microgreens (radish/broccoli sprouts),composite,1,8,8,described dish - decomposition candidate
+kale and lettuce leaves,not_in_db,1,7,7,no token overlap with any DB entry
+microgreens / sprouts,not_in_db,1,6,6,no token overlap with any DB entry
+microgreens garnish,not_in_db,3,2,6,no token overlap with any DB entry
+mixed leafy greens (kale/lettuce),composite,1,6,6,described dish - decomposition candidate
+leafy greens (kale/lettuce),composite,1,6,6,described dish - decomposition candidate
+fresh rosemary garnish,not_in_db,1,5,5,no token overlap with any DB entry
+caper berries,not_in_db,1,4,4,no token overlap with any DB entry
+pickled caperberries,not_in_db,1,4,4,no token overlap with any DB entry
+caperberries,not_in_db,1,4,4,no token overlap with any DB entry
+broccoli/radish microgreens,near_miss_alias,1,4,4,shares ['broccoli'] with DB entries
+lime wedges (garnish),near_miss_alias,1,4,4,shares ['wedge'] with DB entries
+lime wedges,near_miss_alias,1,4,4,shares ['wedge'] with DB entries
