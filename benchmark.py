@@ -55,6 +55,11 @@ def _capture(meal, analysis) -> dict:
                 "source": est.source,
                 "unit_count": raw.unit_count,
                 "per_unit_grams": raw.per_unit_grams,
+                # The model's own pre-pipeline numbers, so later analysis can
+                # measure exactly what each step changed (the Run A bias
+                # decomposition was blocked on not having these).
+                "model_grams": raw.estimated_grams,
+                "model_kcal_per_100g": raw.kcal_per_100g,
                 "assumptions": est.assumptions,
             }
             for est, raw in zip(meal.items, analysis.items)
