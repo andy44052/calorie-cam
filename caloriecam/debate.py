@@ -86,6 +86,22 @@ seem useful: if the draft is sound, return an empty challenges list. Respect \
 any user-provided context; do not challenge facts the user stated.
 """
 
+# Appended when the critic runs on a cheaper model than the lead analyst.
+# Measured (Run B/D, 2026-08-18): cheap critics raise about HALF the
+# portion_too_low challenges of the lead-tier critic, and the system's old
+# undercounting returns. Small models need the expectation stated outright.
+EAGER_CRITIC_SUPPLEMENT = """\
+
+You are reviewing the work of a stronger model, so be thorough, not deferential:
+- Check EVERY draft item one by one: portion grams, kcal_per_100g, count.
+- Vision drafts systematically UNDERESTIMATE portions and hidden fat. On any \
+restaurant-style, sauced, fried, or multi-item photo, a sound-looking draft \
+usually still hides 1-3 real problems - find them.
+- A draft with several items and zero challenges should be rare. Only return \
+an empty list for genuinely trivial photos (a single plain fruit, a drink).
+- Still argue from evidence; never fabricate an objection you cannot defend.
+"""
+
 REVISER_SYSTEM = """\
 You are the lead analyst in a calorie-estimation system. A skeptical reviewer \
 has challenged your draft analysis of this photo. Rule on EVERY challenge, in \
@@ -124,6 +140,7 @@ def criticize(
     client=None,
     hint: Optional[str] = None,
     ledger=None,
+    eager: bool = False,
 ) -> Critique:
     text = (
         "Here is the draft analysis to challenge:\n"
@@ -133,16 +150,38 @@ def criticize(
     messages = [
         {"role": "user", "content": [_image_block(image_b64, media_type), {"type": "text", "text": text}]}
     ]
+    system = CRITIC_SYSTEM + (EAGER_CRITIC_SUPPLEMENT if eager else "")
     return structured_call(
         client=client,
         model=model,
         max_tokens=MAX_TOKENS,
-        system=CRITIC_SYSTEM,
+        system=system,
         messages=messages,
         output_format=Critique,
         ledger=ledger,
         stage="critic",
     )
+
+
+# A challenge is "the same" as another when it disputes the same thing in the
+# same direction; the reviser only needs to hear it once.
+_MERGE_CAP = 12
+
+
+def merge_critiques(critiques: list[Critique]) -> Critique:
+    seen: set[tuple] = set()
+    merged: list[Challenge] = []
+    for critique in critiques:
+        for ch in critique.challenges:
+            key = (ch.kind, ch.target.strip().lower())
+            if key in seen:
+                continue
+            seen.add(key)
+            merged.append(ch)
+    assessment = " / ".join(
+        c.overall_assessment for c in critiques if c.overall_assessment
+    )
+    return Critique(challenges=merged[:_MERGE_CAP], overall_assessment=assessment)
 
 
 def revise(
@@ -186,26 +225,41 @@ def run_debate(
     hint: Optional[str] = None,
     ledger=None,
     skeptic_model: Optional[str] = None,
+    critic_count: int = 1,
 ) -> tuple[FoodAnalysis, Optional[dict]]:
     """Challenge the draft; return (final_analysis, debate_record).
 
     The record is None when there was nothing to debate (no items found).
     ``skeptic_model`` runs the critic and reviser on a different (cheaper)
     model than the primary analyst; None keeps everything on ``model``.
+    ``critic_count`` runs several independent critics and unions their
+    challenges - a cheap-critic ensemble recovers the challenge coverage a
+    single cheap critic lacks (measured Run B/D), while 2-3 cheap critics
+    still cost less than one lead-tier critic. When a cheap skeptic is in
+    play, the critic prompt also switches to the eager variant.
     """
     if not draft.items:
         return draft, None
 
     debate_model = skeptic_model or model
-    critique = criticize(
-        image_b64, media_type, draft, model=debate_model, client=client, hint=hint,
-        ledger=ledger,
-    )
+    eager = bool(skeptic_model) and skeptic_model != model
+    critic_count = max(1, critic_count)
+    critiques = [
+        criticize(
+            image_b64, media_type, draft, model=debate_model, client=client,
+            hint=hint, ledger=ledger, eager=eager,
+        )
+        for _ in range(critic_count)
+    ]
+    critique = merge_critiques(critiques) if critic_count > 1 else critiques[0]
     record = {
         "challenges": [c.model_dump() for c in critique.challenges],
         "assessment": critique.overall_assessment,
         "rulings": [],
     }
+    if critic_count > 1:
+        record["critic_count"] = critic_count
+        record["per_critic_challenges"] = [len(c.challenges) for c in critiques]
     if not critique.challenges:
         return draft, record
 

@@ -1,4 +1,4 @@
-"""CalorieCam benchmark harness — run a photo set, then report on it.
+﻿"""CalorieCam benchmark harness — run a photo set, then report on it.
 
     python benchmark.py run photos/ --runs 3 --out results.jsonl --max-cost 15
     python benchmark.py report results.jsonl --truth truth.json
@@ -126,7 +126,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                 try:
                     meal, analysis = pipeline.run(
                         photo, model=args.model, client=client, debate=not args.no_debate,
-                        skeptic_model=args.skeptic_model,
+                        skeptic_model=args.skeptic_model, critic_count=args.critic_count,
                     )
                     rec["ok"] = True
                     rec.update(_capture(meal, analysis))
@@ -137,6 +137,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                         meal, analysis = pipeline.run(
                             photo, model=args.model, client=client,
                             debate=not args.no_debate, skeptic_model=args.skeptic_model,
+                            critic_count=args.critic_count,
                         )
                         rec["ok"] = True
                         rec.update(_capture(meal, analysis))
@@ -346,6 +347,10 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--out", default="benchmark_results.jsonl")
     r.add_argument("--model", default=DEFAULT_MODEL)
     r.add_argument("--no-debate", action="store_true")
+    r.add_argument(
+        "--critic-count", type=int, default=1,
+        help="run N independent critics and union their challenges (cheap-critic ensemble)",
+    )
     r.add_argument(
         "--skeptic-model", default=None,
         help="run critic+reviser on a cheaper model (A/B the Haiku skeptic)",

@@ -1,4 +1,4 @@
-"""CalorieCam web server - snap a photo on your phone, get calories back.
+﻿"""CalorieCam web server - snap a photo on your phone, get calories back.
 
 Run:  python app.py   (or start-web.cmd)
 Then open the printed URL on any phone on the same Wi-Fi.
@@ -76,6 +76,13 @@ def _skeptic_model() -> str | None:
     return os.environ.get("CALORIECAM_SKEPTIC_MODEL", "").strip() or None
 
 
+def _critic_count() -> int:
+    try:
+        return max(1, int(os.environ.get("CALORIECAM_CRITIC_COUNT", "1")))
+    except ValueError:
+        return 1
+
+
 def _check_pin(x_caloriecam_pin: str | None) -> None:
     required = _required_pin()
     if not required:
@@ -110,6 +117,7 @@ async def estimate(
             hint=hint_val,
             debate=_debate_enabled(),
             skeptic_model=_skeptic_model(),
+            critic_count=_critic_count(),
             history=_history,
         )
     except UnidentifiedImageError:

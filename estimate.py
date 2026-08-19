@@ -1,4 +1,4 @@
-"""CalorieCam CLI - estimate calories from photos of food.
+﻿"""CalorieCam CLI - estimate calories from photos of food.
 
 Usage:
     python estimate.py photo.jpg [more_photos...] [--json] [--model MODEL]
@@ -48,6 +48,12 @@ def main(argv: list[str] | None = None) -> int:
         help="run the critic+reviser on a cheaper model (e.g. claude-haiku-4-5)",
     )
     parser.add_argument(
+        "--critic-count",
+        type=int,
+        default=1,
+        help="run N independent critics and union their challenges (cheap-critic ensemble)",
+    )
+    parser.add_argument(
         "--no-history",
         dest="history",
         action="store_false",
@@ -66,6 +72,7 @@ def main(argv: list[str] | None = None) -> int:
                 hint=args.hint,
                 debate=args.debate,
                 skeptic_model=args.skeptic_model,
+                critic_count=args.critic_count,
                 history=store,
             )
         except FileNotFoundError:

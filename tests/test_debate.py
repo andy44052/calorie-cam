@@ -77,6 +77,73 @@ def _debated_final():
 # --- run_debate unit behavior -------------------------------------------------
 
 
+def test_critic_ensemble_unions_and_dedupes():
+    """Two cheap critics: union of challenges, duplicates ruled once."""
+    from caloriecam.debate import merge_critiques
+
+    a = Critique(
+        challenges=[
+            Challenge(target="rice", kind="portion_too_low", argument="pile is deep"),
+            Challenge(target="sauce", kind="missed_item", argument="visible drizzle"),
+        ],
+        overall_assessment="undercounts",
+    )
+    b = Critique(
+        challenges=[
+            Challenge(target="Rice", kind="portion_too_low", argument="bowl is full"),
+            Challenge(target="rice", kind="density_too_low", argument="oil sheen"),
+        ],
+        overall_assessment="density low",
+    )
+    merged = merge_critiques([a, b])
+    assert [(c.kind, c.target.lower()) for c in merged.challenges] == [
+        ("portion_too_low", "rice"),
+        ("missed_item", "sauce"),
+        ("density_too_low", "rice"),
+    ]
+    assert "undercounts" in merged.overall_assessment
+
+
+def test_critic_count_runs_multiple_critics():
+    client = QueueClient(
+        Critique(challenges=[], overall_assessment="fine"),
+        Critique(challenges=[], overall_assessment="fine too"),
+    )
+    final, record = run_debate(
+        "QUJD", "image/jpeg", _draft(), client=client,
+        skeptic_model="claude-haiku-4-5", critic_count=2,
+    )
+    assert len(client.calls) == 2  # two critics, no reviser (nothing survived)
+    assert record["critic_count"] == 2
+    assert record["per_critic_challenges"] == [0, 0]
+
+
+def test_ensemble_challenges_reach_one_reviser():
+    dup = _critique_with_challenge()
+    client = QueueClient(dup, dup, _debated_final())
+    final, record = run_debate(
+        "QUJD", "image/jpeg", _draft(), client=client,
+        skeptic_model="claude-haiku-4-5", critic_count=2,
+    )
+    assert len(client.calls) == 3  # 2 critics + 1 reviser
+    assert len(record["challenges"]) == 1  # identical challenges deduped
+    assert final.items[0].estimated_grams == 260
+
+
+def test_cheap_skeptic_gets_the_eager_critic_prompt():
+    from caloriecam.debate import EAGER_CRITIC_SUPPLEMENT
+
+    marker = EAGER_CRITIC_SUPPLEMENT.strip()[:40]
+    client = QueueClient(Critique(challenges=[], overall_assessment="fine"))
+    run_debate("QUJD", "image/jpeg", _draft(), client=client,
+               skeptic_model="claude-haiku-4-5")
+    assert marker in client.calls[0]["system"]
+
+    client2 = QueueClient(Critique(challenges=[], overall_assessment="fine"))
+    run_debate("QUJD", "image/jpeg", _draft(), client=client2)
+    assert marker not in client2.calls[0]["system"]
+
+
 def test_debate_revises_when_challenged():
     client = QueueClient(_critique_with_challenge(), _debated_final())
     final, record = run_debate("QUJD", "image/jpeg", _draft(), client=client)
