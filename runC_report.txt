@@ -1,0 +1,78 @@
+﻿=== 23 runs over 23 photos ===
+
+photo                                                    runs  spread
+img01                                                     286      0%
+img02                                                    9433      0%
+img03                                                    1079      0%
+img04                                                    1665      0%
+img05                                                     512      0%
+img06                                                     343      0%
+img07                                                     373      0%
+img08                                                    2425      0%
+img09                                                     688      0%
+img10                                                    2125      0%
+img11                                                    2416      0%
+img12                                                      40      0%
+img13                                                     600      0%
+img14                                                     745      0%
+img15                                                     891      0%
+img16                                                     800      0%
+img17                                                     980      0%
+img18                                                     420      0%
+img19                                                     182      0%
+img20                                                     496      0%
+img21                                                     835      0%
+img22                                                     651      0%
+img23                                                     923      0%
+
+stability: median spread 0%, worst 0%
+cost:      $2.65 total, $0.1153/run (min $0.0169, max $0.4061)
+latency:   77s mean, 372s worst
+
+debate:    22/23 runs debated, 19 drew challenges
+  verdicts: 18 accepted (33%), 34 partial (63%), 2 rejected (4%)
+  -> reviser is a rubber stamp only if accepted% is near 100 AND partial+rejected are near 0
+  challenge kinds: portion_too_low 26, density_too_low 12, missed_item 7, wrong_identification 6, portion_too_high 2, density_too_high 1
+  skip-debate gate fired on 1 runs
+
+database:  99 items across all runs
+  model_estimate         56 items    29% of kcal
+  database_generic       37 items    57% of kcal
+  database_branded        6 items    14% of kcal
+  50 items used a unit count (51%)
+
+accuracy vs truth:
+  img01                                  truth    390  est    286    -27%  LOW
+  img06                                  truth    210  est    343    +63%  HIGH
+  img08                                  truth   2390  est   2425     +1%  OK
+  img12                                  truth     35  est     40    +14%  OK
+  img18                                  truth    420  est    420     +0%  OK
+  img19                                  truth    190  est    182     -4%  OK
+
+  MAPE 18%   bias +8%   within 25%: 4/6
+
+vs runA.jsonl:
+photo                                      before      after    change
+img01                                         429        286     -33%   spread 11% -> 0%
+img02                                        8942       9433      +5%   spread 12% -> 0%
+img03                                         892       1079     +21%   spread 20% -> 0%
+img04                                        3563       1665     -53%   spread 23% -> 0%
+img05                                        2388        512     -79%   spread 12% -> 0%
+img06                                         215        343     +60%   spread 19% -> 0%
+img07                                         439        373     -15%   spread 10% -> 0%
+img08                                        1963       2425     +24%   spread 1% -> 0%
+img09                                         798        688     -14%   spread 4% -> 0%
+img10                                        2125       2125      +0%   spread 8% -> 0%
+img11                                        2763       2416     -13%   spread 33% -> 0%
+img12                                          41         40      -2%   spread 12% -> 0%
+img13                                         708        600     -15%   spread 3% -> 0%
+img14                                         973        745     -23%   spread 4% -> 0%
+img15                                        1185        891     -25%   spread 19% -> 0%
+img16                                        1200        800     -33%   spread 0% -> 0%
+img17                                        1225        980     -20%   spread 21% -> 0%
+img18                                         420        420      +0%   spread 29% -> 0%
+img19                                         192        182      -5%   spread 10% -> 0%
+img20                                         660        496     -25%   spread 15% -> 0%
+img21                                         599        835     +39%   spread 23% -> 0%
+img22                                        1038        651     -37%   spread 41% -> 0%
+img23                                         878        923      +5%   spread 11% -> 0%
