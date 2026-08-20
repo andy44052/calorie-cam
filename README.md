@@ -137,7 +137,33 @@ gitignored). That buys three things:
   and the diary always stores the raw pre-blend estimate so the prior can
   never feed on its own output.
 - **Corrections** — the "Know better?" box on each result stores what the
-  meal really was; future estimates of that food lean on it.
+  meal really was; future estimates of that food lean on it. Tick **measured**
+  when the number came from a kitchen scale or a package label rather than a
+  guess: those become the gold labels calibration is fitted on.
+
+### Calibration (measure your own bias, then remove it)
+
+The pipeline stacks several deliberate upward nudges (portion sizing rules,
+the skeptic's challenges, unit-weight clamps). Their combined residual is a
+small systematic bias — measured at +2% on the benchmark. Once you have ten
+or more **measured** meals in the diary, fit it out:
+
+```powershell
+.venv\Scripts\python.exe calibrate.py show    # gold-meal count + active factors
+.venv\Scripts\python.exe calibrate.py fit     # fit, review, write
+```
+
+The fit solves for one multiplier per calorie source (database-generic,
+database-branded, model-estimate), shrinks the result toward 1.0 (hard when
+the sample is small), clamps every factor to ±15%, and leaves any source seen
+in fewer than three meals untouched. Delete
+`caloriecam/data/calibration.json` to turn calibration off entirely.
+
+Two guards keep this from becoming a second source of error: the diary stores
+each item's calibration factor and divides it back out when fitting, so a
+refit never compounds the last one; and the printed before/after numbers are
+in-sample, so judge a new fit on the *next* week of meals, not on the fit's
+own report.
 
 The adaptive debate gate also decides per photo whether the skeptic pass is
 worth paying for: drafts where every item is database-anchored, few in number,

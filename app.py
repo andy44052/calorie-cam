@@ -167,6 +167,11 @@ async def estimate(
 
 class Correction(BaseModel):
     kcal: int = Field(gt=0, lt=100_000, description="What the meal really was")
+    verified: bool = Field(
+        default=False,
+        description="True when measured (kitchen scale / package label), not eyeballed"
+        " - verified corrections become calibration gold labels",
+    )
 
 
 @app.post("/api/meals/{meal_id}/correct")
@@ -183,7 +188,7 @@ def correct_meal(
     _check_pin(x_caloriecam_pin)
     if _history is None:
         raise HTTPException(status_code=404, detail="History is disabled on this server.")
-    if not _history.correct(meal_id, correction.kcal):
+    if not _history.correct(meal_id, correction.kcal, verified=correction.verified):
         raise HTTPException(status_code=404, detail="No such meal.")
     return {"ok": True, "meal_id": meal_id, "corrected_mid": correction.kcal,
             "today": _history.today_total()}

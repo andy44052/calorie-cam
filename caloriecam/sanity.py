@@ -8,7 +8,7 @@ low/mid/high kcal range. Everything here is pure Python and fully unit-tested.
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
-from . import units
+from . import calibration, units
 from .schema import FoodAnalysis, FoodItem
 from .text import tokens as _tokens
 
@@ -51,6 +51,11 @@ class ItemEstimate:
     # otherwise. The history store records THIS value, never the blended one,
     # so the prior can't feed on its own output.
     grams_raw: Optional[int] = None
+    # The calibration multiplier baked into the kcal fields (1.0 = none).
+    # Stored alongside the item so calibrate.py can divide it back out and
+    # always fit on UNcalibrated estimates - otherwise each refit would
+    # compound the previous one.
+    cal_factor: float = 1.0
 
 
 @dataclass
@@ -224,6 +229,19 @@ def _evaluate_item(raw: FoodItem, res: "Optional[Resolution]") -> ItemEstimate:
     )
 
 
+def _apply_calibration(item: ItemEstimate) -> None:
+    factor = calibration.factor_for(item.source)
+    if abs(factor - 1.0) < 1e-9:
+        return
+    item.cal_factor = factor
+    item.kcal_low = round(item.kcal_low * factor)
+    item.kcal_mid = round(item.kcal_mid * factor)
+    item.kcal_high = round(item.kcal_high * factor)
+    item.assumptions.append(
+        f"calibrated x{factor:.2f} ({calibration.provenance()})"
+    )
+
+
 def evaluate(
     analysis: FoodAnalysis,
     resolutions: "Optional[list[Optional[Resolution]]]" = None,
@@ -232,6 +250,8 @@ def evaluate(
         resolutions = [None] * len(analysis.items)
 
     items = [_evaluate_item(raw, res) for raw, res in zip(analysis.items, resolutions)]
+    for item in items:
+        _apply_calibration(item)
 
     return MealEstimate(
         items=items,

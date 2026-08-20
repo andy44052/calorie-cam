@@ -28,16 +28,17 @@ _DEFAULT_PATH = Path(__file__).resolve().parent / "history.db"
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS meals (
-    id            INTEGER PRIMARY KEY,
-    ts            TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now', 'localtime')),
-    total_low     INTEGER,
-    total_mid     INTEGER,
-    total_high    INTEGER,
-    corrected_mid INTEGER,
-    hint          TEXT,
-    debate_ran    INTEGER,
-    model         TEXT,
-    cost_usd      REAL
+    id                 INTEGER PRIMARY KEY,
+    ts                 TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now', 'localtime')),
+    total_low          INTEGER,
+    total_mid          INTEGER,
+    total_high         INTEGER,
+    corrected_mid      INTEGER,
+    corrected_verified INTEGER NOT NULL DEFAULT 0,
+    hint               TEXT,
+    debate_ran         INTEGER,
+    model              TEXT,
+    cost_usd           REAL
 );
 CREATE TABLE IF NOT EXISTS items (
     id             INTEGER PRIMARY KEY,
@@ -53,7 +54,8 @@ CREATE TABLE IF NOT EXISTS items (
     kcal_mid       REAL,
     kcal_high      REAL,
     source         TEXT,
-    confidence     TEXT
+    confidence     TEXT,
+    cal_factor     REAL NOT NULL DEFAULT 1.0
 );
 CREATE INDEX IF NOT EXISTS idx_items_norm ON items(name_norm);
 CREATE INDEX IF NOT EXISTS idx_meals_ts   ON meals(ts);
@@ -88,6 +90,18 @@ class HistoryStore:
         self.path = Path(path)
         with self._connect() as conn:
             conn.executescript(_SCHEMA)
+            self._migrate(conn)
+
+    @staticmethod
+    def _migrate(conn: sqlite3.Connection) -> None:
+        """Add columns newer code expects to databases created by older code."""
+        for table, column, decl in (
+            ("meals", "corrected_verified", "INTEGER NOT NULL DEFAULT 0"),
+            ("items", "cal_factor", "REAL NOT NULL DEFAULT 1.0"),
+        ):
+            have = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+            if column not in have:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
 
     def _connect(self) -> sqlite3.Connection:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -135,8 +149,8 @@ class HistoryStore:
                 conn.execute(
                     "INSERT INTO items (meal_id, name_raw, name_norm, brand, grams,"
                     " per_unit_grams, unit_count, kcal_per_100g, kcal_low, kcal_mid,"
-                    " kcal_high, source, confidence)"
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    " kcal_high, source, confidence, cal_factor)"
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         meal_id,
                         est.name,
@@ -151,18 +165,49 @@ class HistoryStore:
                         est.kcal_high * unblend,
                         est.source,
                         est.confidence,
+                        getattr(est, "cal_factor", 1.0),
                     ),
                 )
         return meal_id
 
-    def correct(self, meal_id: int, corrected_mid: int) -> bool:
-        """Store the user's post-meal correction. Returns False on unknown id."""
+    def correct(self, meal_id: int, corrected_mid: int, verified: bool = False) -> bool:
+        """Store the user's post-meal correction. Returns False on unknown id.
+
+        ``verified`` marks a MEASURED truth (kitchen scale, package label) -
+        the gold labels calibration fits on - as opposed to an eyeball opinion,
+        which still improves portion priors but never trains calibration.
+        """
         with self._connect() as conn:
             cur = conn.execute(
-                "UPDATE meals SET corrected_mid = ? WHERE id = ?",
-                (corrected_mid, meal_id),
+                "UPDATE meals SET corrected_mid = ?, corrected_verified = ? WHERE id = ?",
+                (corrected_mid, 1 if verified else 0, meal_id),
             )
             return cur.rowcount > 0
+
+    # --- calibration support ---------------------------------------------------
+
+    def verified_truths(self) -> list[dict]:
+        """(truth, per-source UNcalibrated estimate) pairs from verified meals.
+
+        Stored item kcal has that record's calibration factor baked in;
+        dividing by cal_factor recovers the raw estimate so refits never
+        compound earlier fits.
+        """
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT m.id, m.ts, m.corrected_mid, i.source,"
+                " SUM(i.kcal_mid / i.cal_factor)"
+                " FROM meals m JOIN items i ON i.meal_id = m.id"
+                " WHERE m.corrected_verified = 1 AND m.corrected_mid IS NOT NULL"
+                " GROUP BY m.id, i.source ORDER BY m.ts",
+            ).fetchall()
+        meals: dict[int, dict] = {}
+        for meal_id, ts, truth, source, kcal in rows:
+            entry = meals.setdefault(
+                meal_id, {"meal_id": meal_id, "ts": ts, "truth": truth, "by_source": {}}
+            )
+            entry["by_source"][source] = kcal
+        return list(meals.values())
 
     # --- reading -------------------------------------------------------------
 
