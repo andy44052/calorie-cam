@@ -106,7 +106,7 @@ estimate is a decent fallback; a confidently wrong database value is not.
   stores pre-blend grams; each item records the calibration factor applied and
   the fit divides it back out.
 
-## Current benchmark baseline (Run A: 23 photos x 3 runs, $12.81)
+## Current benchmark baseline (Run A: 23 photos x 3 runs)
 
 | Metric | Value |
 |---|---|
