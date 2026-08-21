@@ -31,10 +31,20 @@ def test_db_anchored_high_confidence_skips():
 
 
 def test_unmatched_variant_counts_as_unanchored():
-    # "green apple" misses the DB ("green" is a meaningful token), so the
-    # draft has an item with no anchor -> the skeptic pass is warranted.
-    analysis = FoodAnalysis(items=[_item(), _item(name="green apple")])
+    # A food the database genuinely does not know has no anchor, so the
+    # skeptic pass is warranted.
+    analysis = FoodAnalysis(items=[_item(), _item(name="dragonfruit sorbet")])
     assert needs_debate(analysis) is True
+
+
+def test_colour_variants_anchor_to_the_plain_food():
+    # A green apple has the same energy density as a red one, so "green apple"
+    # must anchor rather than counting as unmatched. This fixture used to be
+    # the unanchored case above; colour words became modifiers when Run E
+    # showed "red wine grapes (on the vine)" booking 80 kcal/100g instead of
+    # the database's 69.
+    analysis = FoodAnalysis(items=[_item(), _item(name="green apple")])
+    assert needs_debate(analysis) is False
 
 
 def test_any_model_estimate_item_debates():

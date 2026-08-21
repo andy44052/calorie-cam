@@ -47,6 +47,13 @@ _MODIFIERS = frozenset({
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     "ten", "single", "couple", "few", "toasted", "seasoned", "type",
     "mixed", "marinated", "assorted", "cured",
+    # Colour and growing-form words: a red grape and a green grape have the
+    # same energy density, and "on the vine"/"cluster" describe presentation,
+    # not the food. units.py already treats these as weight-neutral; Run E
+    # showed the matcher rejecting "red wine grapes (main cluster on the
+    # vine)" and booking 80 kcal/100g instead of the database's 69.
+    "red", "green", "black", "white", "purple", "yellow", "golden", "brown",
+    "vine", "cluster", "seedless", "pitted", "ripe", "unripe",
 })
 
 # Per-unit items (pizza slices, tacos): scale the kcal by count when the

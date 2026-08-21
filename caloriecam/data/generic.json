@@ -1,4 +1,4 @@
-﻿{
+{
   "provenance": "Compiled by the project owner from USDA data and aggregated sources (2026-08); combined-dish values and red-team-audit entries added from USDA/FNDDS-style as-prepared figures. kcal_per_100g is for the food as typically prepared. loose_match marks combined dishes that absorb ingredient words; exclude_tokens blocks meaning-changing words.",
   "foods": [
     {"name": "apple", "aliases": ["apple", "apples"], "kcal_per_100g": 52, "typical_serving_g": 185, "exclude_tokens": ["baked", "candied", "caramel"]},
@@ -7,7 +7,7 @@
     {"name": "strawberries", "aliases": ["strawberry", "strawberries"], "kcal_per_100g": 33, "typical_serving_g": 150},
     {"name": "blueberries", "aliases": ["blueberry", "blueberries"], "kcal_per_100g": 57, "typical_serving_g": 148},
     {"name": "watermelon", "aliases": ["watermelon"], "kcal_per_100g": 30, "typical_serving_g": 150},
-    {"name": "grapes", "aliases": ["grape", "grapes", "black grapes", "seedless grapes", "black seedless grapes", "green grapes", "red grapes"], "kcal_per_100g": 69, "typical_serving_g": 150},
+    {"name": "grapes", "aliases": ["grape", "grapes", "black grapes", "seedless grapes", "black seedless grapes", "green grapes", "red grapes", "wine grapes", "table grapes"], "kcal_per_100g": 69, "typical_serving_g": 150},
     {"name": "avocado", "aliases": ["avocado", "half avocado"], "kcal_per_100g": 160, "typical_serving_g": 100},
     {"name": "broccoli, cooked", "aliases": ["broccoli", "steamed broccoli", "cooked broccoli", "roasted broccoli"], "kcal_per_100g": 35, "typical_serving_g": 155},
     {"name": "spinach, raw", "aliases": ["spinach", "baby spinach"], "kcal_per_100g": 23, "typical_serving_g": 60},
