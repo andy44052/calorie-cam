@@ -9,7 +9,9 @@ JPEG_QUALITY = 85
 
 # Room for adaptive thinking + the structured answer (thinking counts toward
 # max_tokens on Opus 5).
-MAX_TOKENS = 16000
+# The reviser re-emits the whole analysis plus a ruling per challenge, so it
+# is the longest output in the pipeline; 16000 truncated on rich photos.
+MAX_TOKENS = 24000
 
 # User-typed context ("cooked in olive oil", "double chicken") is capped so a
 # giant paste can't blow up the prompt.

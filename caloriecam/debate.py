@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field
 
 from .config import DEFAULT_MODEL, MAX_TOKENS
 from .schema import FoodAnalysis
-from .vision import structured_call
+from .vision import TruncatedError, structured_call
 
 
 class Challenge(BaseModel):
@@ -263,16 +263,23 @@ def run_debate(
     if not critique.challenges:
         return draft, record
 
-    debated = revise(
-        image_b64,
-        media_type,
-        draft,
-        critique,
-        model=debate_model,
-        client=client,
-        hint=hint,
-        ledger=ledger,
-    )
+    try:
+        debated = revise(
+            image_b64,
+            media_type,
+            draft,
+            critique,
+            model=debate_model,
+            client=client,
+            hint=hint,
+            ledger=ledger,
+        )
+    except TruncatedError:
+        # The reviser is the longest output in the pipeline; on a rich photo it
+        # can still overrun. The draft is a complete, valid analysis - returning
+        # it un-revised beats losing an estimate the user already paid for.
+        record["reviser_truncated"] = True
+        return draft, record
     if skeptic_model:
         record["skeptic_model"] = skeptic_model
     record["rulings"] = [r.model_dump() for r in debated.rulings]

@@ -208,3 +208,24 @@ def test_report_omits_debate_line_when_clean(photo_path, sample_analysis):
     meal, _ = pipeline.run(photo_path, client=client)
     assert "debate:" not in report.to_text(meal, "meal.jpg")
     assert report.to_dict(meal, "meal.jpg")["debate"]["challenges"] == []
+
+
+def test_truncated_reviser_falls_back_to_the_draft():
+    """A cut-off reviser must not destroy an estimate the user paid for."""
+    from caloriecam.vision import TruncatedError
+
+    class TruncatingClient(QueueClient):
+        def parse(self, **kwargs):
+            self.calls.append(kwargs)
+            if kwargs["output_format"] is Critique:
+                return SimpleNamespace(
+                    parsed_output=_critique_with_challenge(), stop_reason="end_turn"
+                )
+            raise TruncatedError("reviser output exceeded max_tokens (24000)")
+
+    client = TruncatingClient()
+    draft = _draft()
+    final, record = run_debate("QUJD", "image/jpeg", draft, client=client)
+    assert final is draft                       # the complete draft survives
+    assert record["reviser_truncated"] is True  # and the record says why
+    assert len(record["challenges"]) == 1

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import BinaryIO
 
 import anthropic
+import pydantic
 from PIL import Image, ImageOps
 
 from . import usage as usage_mod
@@ -27,6 +28,15 @@ class VisionError(RuntimeError):
 
 class RefusalError(VisionError):
     """The API declined the request (stop_reason == 'refusal')."""
+
+
+class TruncatedError(VisionError):
+    """Structured output was cut off by max_tokens, so it will not parse.
+
+    Raised at the parse boundary: the SDK validates the JSON before we ever
+    see stop_reason, so a truncated response surfaces as a ValidationError
+    rather than a clean max_tokens signal.
+    """
 
 
 SYSTEM_PROMPT = """\
@@ -198,13 +208,22 @@ def structured_call(
         client = anthropic.Anthropic()
 
     started = time.monotonic()
-    response = client.messages.parse(
-        model=model,
-        max_tokens=max_tokens,
-        system=system,
-        messages=messages,
-        output_format=output_format,
-    )
+    try:
+        response = client.messages.parse(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=messages,
+            output_format=output_format,
+        )
+    except pydantic.ValidationError as exc:
+        # Truncation looks like malformed JSON ("EOF while parsing"); a
+        # genuinely wrong shape is a different bug and must keep propagating.
+        if "Invalid JSON" in str(exc) or "EOF while parsing" in str(exc):
+            raise TruncatedError(
+                f"{stage} output exceeded max_tokens ({max_tokens}) and was cut off"
+            ) from exc
+        raise
     if ledger is not None:
         ledger.record(
             usage_mod.from_response(
