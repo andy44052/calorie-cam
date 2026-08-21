@@ -88,10 +88,6 @@ food covers and how deep the pile is, turn that into a volume, then into \
 grams. Put that chain in the item's assumptions so it can be checked.
 - Rough cooked densities, grams per ml: rice and pasta 0.8, stew and soup 1.0, \
 mashed potato 1.0, leafy salad 0.15, ice cream 0.55, thick sauces 1.1.
-- Do not stack volume additions: a mounded dome above a bowl's rim rarely \
-holds more than about a third of the bowl's own volume, and food lifted on a \
-utensil came FROM the bowl - never add rim-full volume plus a large dome plus \
-a lifted portion as three separate amounts.
 - A drink served over ice holds only about 60-70% of the cup's volume as \
 liquid.
 
