@@ -1,5 +1,7 @@
 # CalorieCam — Knowledge Base
 
+> [中文版本](KNOWLEDGE_BASE.zh-CN.md)
+
 Written so someone who has never seen this project can maintain it. Read
 `ARCHITECTURE.md` first for the flow diagram.
 

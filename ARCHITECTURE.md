@@ -1,5 +1,7 @@
 # CalorieCam — Architecture
 
+> [中文版本](ARCHITECTURE.zh-CN.md)
+
 Photo in, itemized calorie estimate out. The design principle running through
 everything: **the model is used for perception, not arithmetic.** Claude
 identifies food and estimates portions; every calorie number after that comes
